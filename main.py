@@ -48,11 +48,13 @@ sprite.rect = sprite.image.get_rect()
 sprite.rect.y = HEIGHT // 2
 
 clock = pygame.time.Clock()
-player = Player()
+player = Player(sprite)
+s = 0
 all_sprites.add(sprite)
 
 
 while True:
+    KEYS = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
