@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from shop import Ui_MainWindow
 
 pygame.init()
-
+all_sprites = pygame.sprite.Group()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
@@ -17,7 +17,7 @@ def shop_start():
     app = QApplication(sys.argv)
     ex = MyWidget()
     ex.show()
-    sys.exit(app.exec_())
+    app.exec()
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -35,11 +35,27 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+class Shop(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Shop, self).__init__(all_sprites)
+        self.image = pygame.transform.scale(load_image('pol.png'), (50, 70))
+        self.rect = self.image.get_rect()
+        self.rect.x = 50
+        self.rect.y = 50
+
+    def update(self, pos):
+        if self.rect.collidepoint(pos):
+            shop_start()
+
+
+Shop()
 while True:
     screen.fill('black')
     KEYS = pygame.key.get_pressed()
     for i in pygame.event.get():
-        if i.type == pygame.QUIT or KEYS[pygame.K_c]:
+        if KEYS[pygame.K_q] + KEYS[pygame.K_LCTRL] == 2:
             sys.exit()
-
+        if i.type == pygame.MOUSEBUTTONDOWN:
+            all_sprites.update(i.pos)
+    all_sprites.draw(screen)
     pygame.display.flip()
