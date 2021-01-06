@@ -1,23 +1,40 @@
 import sys, os, pygame
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from shop import Ui_MainWindow
+from settings import Ui_MainWindow_1
 
 pygame.init()
 all_sprites = pygame.sprite.Group()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
-class MyWidget(QMainWindow, Ui_MainWindow):
+class MyShop(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Магазин')
 
-def shop_start():
+
+class MySettings(QMainWindow, Ui_MainWindow_1):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Настройки')
+
+
+def qt_start_shop():
     app = QApplication(sys.argv)
-    ex = MyWidget()
+    ex = MyShop()
     ex.show()
     app.exec()
+
+
+def qt_start_settings():
+    app = QApplication(sys.argv)
+    ex = MySettings()
+    ex.show()
+    app.exec()
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -35,25 +52,47 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+
 class Shop(pygame.sprite.Sprite):
     def __init__(self):
         super(Shop, self).__init__(all_sprites)
-        self.image = pygame.transform.scale(load_image('pol.png'), (50, 70))
+        self.image = pygame.transform.scale(load_image('shop.png'), (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = 50
-        self.rect.y = 50
+        self.rect.x = screen.get_width() - 100
+        self.rect.y = 0
 
     def update(self, pos):
         if self.rect.collidepoint(pos):
-            shop_start()
+            qt_start_shop()
+        if pygame.display.get_active():
+            self.rect.x = screen.get_width() - 100
+            self.rect.y = 0
+
+
+class Settings(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Settings, self).__init__(all_sprites)
+        self.image = pygame.transform.scale(load_image('settings.png'), (50, 50))
+        self.rect = self.image.get_rect()
+        self.rect.x = screen.get_width() - 50
+        self.rect.y = 0
+
+    def update(self, pos):
+        if self.rect.collidepoint(pos):
+            qt_start_settings()
+        if pygame.display.get_active():
+            self.rect.x = screen.get_width() - 50
+            self.rect.y = 0
 
 
 Shop()
+Settings()
+
 while True:
     screen.fill('black')
     KEYS = pygame.key.get_pressed()
     for i in pygame.event.get():
-        if KEYS[pygame.K_q] + KEYS[pygame.K_LCTRL] == 2:
+        if KEYS[pygame.K_q] + KEYS[pygame.K_LCTRL] == 2 or i.type == pygame.QUIT:
             sys.exit()
         if i.type == pygame.MOUSEBUTTONDOWN:
             all_sprites.update(i.pos)
