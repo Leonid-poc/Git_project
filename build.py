@@ -80,6 +80,7 @@ class Shop(pygame.sprite.Sprite):
 class Settings(pygame.sprite.Sprite):
     def __init__(self):
         super(Settings, self).__init__(all_sprites)
+        self.image = pygame.transform.scale(load_image('settings.png'), (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = screen.get_width() - 50
         self.rect.y = 0
