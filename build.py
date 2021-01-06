@@ -1,5 +1,6 @@
 import sys, os, pygame
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QPixmap
 from shop import Ui_MainWindow
 from settings import Ui_MainWindow_1
 
@@ -22,17 +23,41 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
         self.setWindowTitle('Настройки')
         self.horizontalSlider.sliderMoved.connect(self.run)
         self.horizontalSlider_2.sliderMoved.connect(self.run)
+        self.horizontalSlider.sliderReleased.connect(self.run)
+        self.horizontalSlider_2.sliderReleased.connect(self.run)
+        self.pixmap = [QPixmap(r'data\none_vol.png'), QPixmap(r'data\low_vol.png'),
+                       QPixmap(r'data\middle_vol.png'), QPixmap(r'data\hight_vol.png')]
+        self.label.setPixmap(self.pixmap[1])
+        self.label_2.setPixmap(self.pixmap[1])
 
     def run(self):
         if self.sender().objectName()[-1] == '2':
             self.lcdNumber_2.display(self.horizontalSlider_2.value())
+            if self.horizontalSlider_2.value() == 0:
+                self.label_2.setPixmap(self.pixmap[0])
+            else:
+                if self.horizontalSlider_2.value() >= 99:
+                    self.label_2.setPixmap(self.pixmap[3])
+                else:
+                    self.label_2.setPixmap(self.pixmap[int(self.horizontalSlider_2.value() // 33 + 1)])
         else:
             self.lcdNumber.display(self.horizontalSlider.value())
+            if self.horizontalSlider.value() == 0:
+                self.label.setPixmap(self.pixmap[0])
+            else:
+                if self.horizontalSlider.value() >= 99:
+                    self.label.setPixmap(self.pixmap[3])
+                else:
+                    self.label.setPixmap(self.pixmap[int(self.horizontalSlider.value() // 33 + 1)])
+
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 def qt_start_shop():
     app = QApplication(sys.argv)
     ex = MyShop()
     ex.show()
+    sys.excepthook = except_hook
     app.exec()
 
 
@@ -40,6 +65,7 @@ def qt_start_settings():
     app = QApplication(sys.argv)
     ex = MySettings()
     ex.show()
+    sys.excepthook = except_hook
     app.exec()
 
 
