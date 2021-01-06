@@ -20,7 +20,14 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Настройки')
+        self.horizontalSlider.sliderMoved.connect(self.run)
+        self.horizontalSlider_2.sliderMoved.connect(self.run)
 
+    def run(self):
+        if self.sender().objectName()[-1] == '2':
+            self.lcdNumber_2.display(self.horizontalSlider_2.value())
+        else:
+            self.lcdNumber.display(self.horizontalSlider.value())
 
 def qt_start_shop():
     app = QApplication(sys.argv)
@@ -65,6 +72,7 @@ class Shop(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             qt_start_shop()
         if pygame.display.get_active():
+            self.image = pygame.transform.scale(load_image('shop.png'), (50, 50))
             self.rect.x = screen.get_width() - 100
             self.rect.y = 0
 
@@ -72,7 +80,6 @@ class Shop(pygame.sprite.Sprite):
 class Settings(pygame.sprite.Sprite):
     def __init__(self):
         super(Settings, self).__init__(all_sprites)
-        self.image = pygame.transform.scale(load_image('settings.png'), (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = screen.get_width() - 50
         self.rect.y = 0
