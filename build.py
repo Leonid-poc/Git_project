@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPixmap
 from shop import Ui_MainWindow
 from settings import Ui_MainWindow_1
-
+from phis import Player
 pygame.init()
 all_sprites = pygame.sprite.Group()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -121,14 +121,14 @@ class Settings(pygame.sprite.Sprite):
 
 Shop()
 Settings()
-
-while True:
-    screen.fill('black')
-    KEYS = pygame.key.get_pressed()
-    for i in pygame.event.get():
-        if KEYS[pygame.K_q] + KEYS[pygame.K_LCTRL] == 2 or i.type == pygame.QUIT:
-            sys.exit()
-        if i.type == pygame.MOUSEBUTTONDOWN:
-            all_sprites.update(i.pos)
-    all_sprites.draw(screen)
-    pygame.display.flip()
+Player.main(Player)
+# while True:
+#     screen.fill('black')
+#     KEYS = pygame.key.get_pressed()
+#     for i in pygame.event.get():
+#         if KEYS[pygame.K_q] + KEYS[pygame.K_LCTRL] == 2 or i.type == pygame.QUIT:
+#             sys.exit()
+#         if i.type == pygame.MOUSEBUTTONDOWN:
+#             all_sprites.update(i.pos)
+#     all_sprites.draw(screen)
+#     pygame.display.flip()
