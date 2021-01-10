@@ -115,7 +115,6 @@ class Map(pygame.sprite.Sprite):
 #             self.render(self)
 
 
-# Создаём объекты класса, тебе должно быть стыдно, если ты этого не понял
 Shop()
 Settings()
 Player()
