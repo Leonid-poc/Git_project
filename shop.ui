@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">color: rgb(85, 0, 255);</string>
+   <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(33, 68, 207, 255));</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -24,13 +24,14 @@
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(85, 0, 0);</string>
+       <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(0, 255, 255);</string>
       </property>
       <property name="tabShape">
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -48,6 +49,9 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
          <widget class="QLabel" name="label">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
           <property name="lineWidth">
            <number>1</number>
           </property>
@@ -64,6 +68,10 @@
         </item>
         <item row="1" column="0">
          <widget class="QPushButton" name="pushButton">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
+          </property>
           <property name="text">
            <string>скин_1</string>
           </property>
@@ -73,6 +81,10 @@
          <widget class="QPushButton" name="pushButton_3">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
           </property>
           <property name="text">
            <string>скин_3</string>
@@ -84,6 +96,10 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
+          </property>
           <property name="text">
            <string>скин_2</string>
           </property>
@@ -91,6 +107,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
           <property name="lineWidth">
            <number>1</number>
           </property>
@@ -107,6 +126,9 @@
         </item>
         <item row="0" column="2">
          <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
           <property name="lineWidth">
            <number>1</number>
           </property>
@@ -128,36 +150,14 @@
         <string>Уровни</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_6">
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::AutoText</enum>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Джунгли</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="2">
          <widget class="QPushButton" name="pushButton_6">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
           </property>
           <property name="text">
            <string>Пустыня</string>
@@ -179,10 +179,28 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
+          </property>
+          <property name="text">
+           <string>Джунгли</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_5">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);
+color: rgb(0, 255, 255);</string>
           </property>
           <property name="text">
            <string>Зима</string>
@@ -204,8 +222,11 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
           <property name="lineWidth">
            <number>1</number>
           </property>
@@ -220,8 +241,30 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_6">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(100, 100, 100);</string>
+          </property>
           <property name="lineWidth">
            <number>1</number>
           </property>
@@ -248,7 +291,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
