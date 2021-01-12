@@ -4,14 +4,10 @@ import pygame
 
 pygame.init()
 clock = pygame.time.Clock()
-RES = WIDTH, HEIGHT = 1920, 1080
-FPS = 60
-projectiles = []
-# Список снарядов на поле
-# переменные ширины и роста для "Персонажей" (x, y)
-screen = pygame.display.set_mode(RES)
-background = load_image(location[0])
+
+
 player = load_image(pers)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -21,15 +17,12 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if not pygame.sprite.spritecollideany(self, map_group):
-            self.rect.x -= 1
+            self.rect.y += 1
+        if KEYS[pygame.K_d]:
+            self.rect.x += 5
+        if KEYS[pygame.K_a]:
+            self.rect.x -= 5
 
-class Map(pygame.sprite.Sprite):
-    def __init__(self, image, loc, x, y):
-        super(Map, self).__init__(all_sprites, map_group)
-        self.image = pygame.transform.scale(load_image(image), (1920 // len(loc[0]), 1080 // len(loc)))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
 
 # class Not_Static_Object():
 #     def __init__(self, x, y):
@@ -113,33 +106,25 @@ class Map(pygame.sprite.Sprite):
 #         if self.x <= WIDTH and self.x >= 0:
 #             self.x += 30
 #             self.render(self)
-
-
-Shop()
+vremenaya = Shop()
 Settings()
 Player()
-
-for i in enumerate(location_code):
-    for j in enumerate(i[1]):
-        if j[1] == 'q':
-            Map(location[1], location_code, 1920 // len(location_code[0]) * j[0], 1080 // len(location_code) * i[0])
-        if j[1] == 'w':
-            Map(location[2], location_code, 1920 // len(location_code[0]) * j[0], 1080 // len(location_code) * i[0])
-
+draw_map()
 
 while True:
     # Основной цикл, куда уж без него, если ты читал комментарии до этого, ты должен всё понять
     # Есть баг с нажатием пробела (110, 112 строчки), помоги исправить, плез, перс улетает в потолок
     KEYS = pygame.key.get_pressed()
-    screen.blit(background, (0, 0))
+    screen.blit(vremenaya.return_background(), (0, 0))
     for i in pygame.event.get():
         if i.type == pygame.MOUSEBUTTONDOWN:
             sprites_dop.update(i.pos)
-
+    player_group.update()
     if KEYS[pygame.K_F10]:
         sys.exit()
 
     all_sprites.draw(screen)
+    map_group.draw(screen)
 
     pygame.display.flip()
     clock.tick(100)

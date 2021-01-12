@@ -1,9 +1,12 @@
+import ctypes
 import sys
 
 import pygame, os
 import pymunk.pygame_util
 from PyQt5.QtWidgets import QApplication
 
+user32 = ctypes.windll.user32
+screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -21,6 +24,7 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+all_sprites = pygame.sprite.Group()
 
 class Player():
     def __init__(self):
@@ -34,7 +38,7 @@ class Player():
         self.JUMP = 250
         # Инициализация Pymunk, создание основынх переменных (поверхность, переопределение координат для Pymunk)
         pymunk.pygame_util.positive_y_is_up = False
-        self.surface = pygame.display.set_mode(self.RES)
+        self.surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.draw_options = pymunk.pygame_util.DrawOptions(self.surface)
         self.space = pymunk.Space()
         self.space.gravity = 0, 2000
@@ -89,16 +93,18 @@ class Player():
 
     def for_start(self):
         # Функция для старта программы, определение управления персонажем и миром
-        background = load_image('dshungl.png')
+        background = load_image(r'Jungle\jungle.png')
         while True:
             KEYS = pygame.key.get_pressed()
-            self.surface.blit(pygame.transform.scale(background,
-                                                     (self.surface.get_width(), self.surface.get_height())), (0, 0))
+            print(self.surface.get_size())
+            self.surface.blit(background, (0, 0))
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    all_sprites.update(event.pos)
                     if event.button == 1:
                         Player.create_ball(self, self.space, event.pos)
+                all_sprites.draw(self.surface)
 
             if KEYS[pygame.K_F10]:
                 exit()

@@ -21,7 +21,8 @@ class Ui_MainWindow_1(object):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.groupBox.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));\n"
+"color: rgb(255, 255, 255);")
         self.groupBox.setObjectName("groupBox")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.groupBox)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -53,7 +54,8 @@ class Ui_MainWindow_1(object):
         self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.groupBox, 0, 1, 1, 1)
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.groupBox_2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));\n"
+"color: rgb(255, 255, 255);")
         self.groupBox_2.setObjectName("groupBox_2")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox_2)
         self.gridLayout_3.setObjectName("gridLayout_3")

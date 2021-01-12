@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.tab_2)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.pushButton_6 = QtWidgets.QPushButton(self.tab_2)
-        self.pushButton_6.setEnabled(False)
+        self.pushButton_6.setEnabled(True)
         self.pushButton_6.setStyleSheet("background-color: rgb(100, 100, 100);\n"
 "color: rgb(0, 255, 255);")
         self.pushButton_6.setCheckable(False)
@@ -97,7 +97,7 @@ class Ui_MainWindow(object):
         self.pushButton_4.setObjectName("pushButton_4")
         self.gridLayout_3.addWidget(self.pushButton_4, 1, 0, 1, 1)
         self.pushButton_5 = QtWidgets.QPushButton(self.tab_2)
-        self.pushButton_5.setEnabled(False)
+        self.pushButton_5.setEnabled(True)
         self.pushButton_5.setStyleSheet("background-color: rgb(100, 100, 100);\n"
 "color: rgb(0, 255, 255);")
         self.pushButton_5.setCheckable(False)
