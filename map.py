@@ -18,10 +18,10 @@ WINTER = [
 ]
 DESERT = [
     '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
-    '..................',
+    'qqqqqqqqqqqqqqqqqq',
+    'qqqqqqqqqqqqqqqqqq',
+    'qqqqqqqqqqqqqqqqqq',
+    'qqqqqqqqqqqqqqqqqq',
+    'qqqqqqqqqqqqqqqqqq',
     'qqqqqqqqqqqqqqqqqq'
 ]

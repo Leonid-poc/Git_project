@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += 5
         if KEYS[pygame.K_SPACE] and not self.jumping:
             self.jumping = True
-        if KEYS[pygame.K_d] and self.rect.x <= screen.get_width():
+        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
             self.rect.x += 5
         if KEYS[pygame.K_a] and self.rect.x >= 0:
             self.rect.x -= 5

@@ -55,6 +55,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.label_5.setPixmap(self.pixmap_loc[1])
         self.label_6.setPixmap(self.pixmap_loc[2])
         self.label.setPixmap(self.pixmap_pers[0])
+        self.label_2.setPixmap(self.pixmap_pers[1])
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
