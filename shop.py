@@ -47,13 +47,13 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.gridLayout_2.addWidget(self.pushButton, 1, 0, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.tab)
-        self.pushButton_3.setEnabled(False)
+        self.pushButton_3.setEnabled(True)
         self.pushButton_3.setStyleSheet("background-color: rgb(100, 100, 100);\n"
 "color: rgb(0, 255, 255);")
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout_2.addWidget(self.pushButton_3, 1, 2, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.tab)
-        self.pushButton_2.setEnabled(False)
+        self.pushButton_2.setEnabled(True)
         self.pushButton_2.setStyleSheet("background-color: rgb(100, 100, 100);\n"
 "color: rgb(0, 255, 255);")
         self.pushButton_2.setObjectName("pushButton_2")
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
