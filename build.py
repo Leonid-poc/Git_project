@@ -36,8 +36,9 @@ screen = pygame.display.set_mode(RES)
 
 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
 background = load_image(location[0])
+font = pygame.font.Font(None, 100)
 location_code = JUNGLE
-pers = r'Jungle\jungle_mainhero.png'
+pers = load_image(r'Jungle\jungle_mainhero.png')
 
 
 class MyShop(QMainWindow, Ui_MainWindow):
@@ -48,14 +49,15 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pixmap_loc = [QPixmap(r'data\Jungle\jungle.png').scaled(267, 150),
                            QPixmap(r'data\Winter\Winter.png').scaled(267, 150),
                            QPixmap(r'data\Desert\desert.png').scaled(267, 150)]
-        self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png'),
-                            QPixmap(r'data\Winter\winter_mainhero.png'),
-                            QPixmap(r'data\Desert\desert_mainhero.png')]
+        self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png').scaled(145, 235),
+                            QPixmap(r'data\Winter\winter_mainhero.png').scaled(145, 235),
+                            QPixmap(r'data\Desert\desert_mainhero.png').scaled(145, 235)]
         self.label_4.setPixmap(self.pixmap_loc[0])
         self.label_5.setPixmap(self.pixmap_loc[1])
         self.label_6.setPixmap(self.pixmap_loc[2])
         self.label.setPixmap(self.pixmap_pers[0])
         self.label_2.setPixmap(self.pixmap_pers[1])
+        self.label_3.setPixmap(self.pixmap_pers[2])
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
@@ -78,15 +80,16 @@ class MyShop(QMainWindow, Ui_MainWindow):
         background = load_image(location[0])
         draw_map()
 
+
     def run_pers(self):
-        global player
+        global player, pers
         if self.sender().objectName()[-1] == 'n':
-            pers = r'Jungle\jungle.png'
+            pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (145, 235))
         if self.sender().objectName()[-1] == '2':
-            pers = r'Winter\Winter.png'
+            pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (145, 235))
         if self.sender().objectName()[-1] == '3':
-            pers = r'Desert\desert.png'
-        player = load_image(pers)
+            pers = pygame.transform.scale(load_image(r'Desert\desert_mainhero.png'), (145, 235))
+
 
 
 class MySettings(QMainWindow, Ui_MainWindow_1):
@@ -191,6 +194,8 @@ class Shop(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             qt_start_shop()
 
+    def return_skin(self):
+        return pers
 
 class Settings(pygame.sprite.Sprite):
     def __init__(self):

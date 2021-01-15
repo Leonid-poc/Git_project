@@ -9,28 +9,23 @@ clock = pygame.time.Clock()
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__(all_sprites, player_group)
-        self.image = pers
+        #pers = load_image("Jungle\jungle_mainhero.png")
+        self.image = vremenaya.return_skin()
+
         self.count_jump = 20
         self.jumping = False
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 0, 735
+        self.rect.x, self.rect.y = 0, 0
 
     def return_now_skin(self):
         return self.image
 
-    def proof_pos(self):
-        for i in map_coords_spisok:
-            if self.rect.x + self.rect.width > i[0] and self.rect.y + self.rect.height > i[1]:
-                return False
-            if i[0] + i[2] > self.rect.x and i[1] + i[3] > self.rect.y:
-                return False
-            return True
-
     def update(self, image):
         if self.image != image:
+            x, y = self.rect.x, self.rect.y
             self.image = image
             self.rect = self.image.get_rect()
-            self.rect.x, self.rect.y = 0, 745
+            self.rect.x, self.rect.y = x, y
             print(self.rect.y)
         if not pygame.sprite.spritecollideany(self, map_group) and not self.jumping:
             self.rect.y += 5
@@ -73,7 +68,7 @@ while True:
         player_group.update(vremenaya.return_skin())
     player_group.update(just_comfort.return_now_skin())
 
-    ren_fon = fon.render(f'{int(clock.get_fps())}', True, (255, 255, 255))
+    ren_fon = font.render(f'{int(clock.get_fps())}', True, (255, 255, 255))
     screen.blit(ren_fon, (0, 0))
 
     all_sprites.draw(screen)
