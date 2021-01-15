@@ -214,11 +214,11 @@ def draw_map():
         map_coords_spisok.clear()
         for j in enumerate(i[1]):
             if j[1] == 'q':
-                Map(location[1], location_code, screen.get_width() // len(location_code[0]) * j[0],
-                    screen.get_height() // len(location_code) * i[0])
+                Map(location[1], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
+                    screen.get_height() // len(location_code) * i[0] + 10)
             if j[1] == 'w':
-                Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0],
-                    screen.get_height() // len(location_code) * i[0])
+                Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
+                    screen.get_height() // len(location_code) * i[0] + 10)
 
 # класс отвечающий за отрисовку иконки магазина на холсте
 class Shop(pygame.sprite.Sprite):

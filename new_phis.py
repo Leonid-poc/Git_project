@@ -36,20 +36,28 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += 5
         if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
             self.jumping = True
-        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width() and self.proof_pos():
+        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
             self.rect.x += 5
-        if KEYS[pygame.K_a] and self.rect.x >= 0 and self.proof_pos():
+        if KEYS[pygame.K_a] and self.rect.x >= 0:
             self.rect.x -= 5
         if self.jumping:
             if self.count_jump >= -20:
                 if self.count_jump < 0:
-                    self.rect.y += (self.count_jump ** 2) / 10
+                    if not pygame.sprite.spritecollideany(self, map_group):
+                        self.rect.y += (self.count_jump ** 2) / 10
+                    else:
+                        self.jumping = False
+                        self.count_jump = 20
                 else:
                     self.rect.y -= (self.count_jump ** 2) / 10
                 self.count_jump -= 1
             else:
-                self.jumping = False
-                self.count_jump = 20
+                if not pygame.sprite.spritecollideany(self, map_group):
+                    self.rect.y += (self.count_jump ** 2) / 10
+                    self.count_jump -= 1
+                else:
+                    self.jumping = False
+                    self.count_jump = 20
 
 
 # вызываю определённые классы которые автоматически отрисовывваются
