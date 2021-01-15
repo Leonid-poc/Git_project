@@ -9,7 +9,7 @@ from map import *
 pygame.init()
 pygame.mixer.init()
 
-
+print("Приевт, еня")
 # функция для адекватной загрузки картинок
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
