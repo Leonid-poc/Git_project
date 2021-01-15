@@ -30,9 +30,11 @@ player_group = pygame.sprite.Group()
 map_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
-RES = WIDTH, HEIGHT = 1920, 1080
 FPS = 60
-screen = pygame.display.set_mode(RES)
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+RES = WIDTH, HEIGHT = pygame.display.get_window_size()
+prop_pers_x, prop_pers_y = int(WIDTH * 0.1324), int(HEIGHT * 0.459)
+
 
 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
 background = load_image(location[0])
@@ -49,9 +51,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pixmap_loc = [QPixmap(r'data\Jungle\jungle.png').scaled(267, 150),
                            QPixmap(r'data\Winter\Winter.png').scaled(267, 150),
                            QPixmap(r'data\Desert\desert.png').scaled(267, 150)]
-        self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png').scaled(145, 235),
-                            QPixmap(r'data\Winter\winter_mainhero.png').scaled(145, 235),
-                            QPixmap(r'data\Desert\desert_mainhero.png').scaled(145, 235)]
+        self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png').scaled(prop_pers_x, prop_pers_y),
+                            QPixmap(r'data\Winter\winter_mainhero.png').scaled(prop_pers_x, prop_pers_y),
+                            QPixmap(r'data\Desert\desert_mainhero.png').scaled(prop_pers_x, prop_pers_y)]
         self.label_4.setPixmap(self.pixmap_loc[0])
         self.label_5.setPixmap(self.pixmap_loc[1])
         self.label_6.setPixmap(self.pixmap_loc[2])
@@ -84,11 +86,11 @@ class MyShop(QMainWindow, Ui_MainWindow):
     def run_pers(self):
         global player, pers
         if self.sender().objectName()[-1] == 'n':
-            pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (145, 235))
+            pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (prop_pers_x, prop_pers_y))
         if self.sender().objectName()[-1] == '2':
-            pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (145, 235))
+            pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (prop_pers_x, prop_pers_y))
         if self.sender().objectName()[-1] == '3':
-            pers = pygame.transform.scale(load_image(r'Desert\desert_mainhero.png'), (145, 235))
+            pers = pygame.transform.scale(load_image(r'Desert\desert_mainhero.png'), (prop_pers_x, prop_pers_y))
 
 
 
@@ -174,9 +176,11 @@ def draw_map():
     for i in enumerate(location_code):
         for j in enumerate(i[1]):
             if j[1] == 'q':
-                Map(location[1], location_code, 1920 // len(location_code[0]) * j[0], 1080 // len(location_code) * i[0])
+                Map(location[1], location_code, screen.get_width() // len(location_code[0]) * j[0],
+                    screen.get_height() // len(location_code) * i[0])
             if j[1] == 'w':
-                Map(location[2], location_code, 1920 // len(location_code[0]) * j[0], 1080 // len(location_code) * i[0])
+                Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0],
+                    screen.get_height() // len(location_code) * i[0])
 
 
 class Shop(pygame.sprite.Sprite):
@@ -184,7 +188,7 @@ class Shop(pygame.sprite.Sprite):
         super(Shop, self).__init__(sprites_dop, all_sprites)
         self.image = pygame.transform.scale(load_image(r'Other\shop.png'), (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = 1920 - 100
+        self.rect.x = screen.get_width() - 100
         self.rect.y = 0
 
     def return_background(self):
@@ -202,7 +206,7 @@ class Settings(pygame.sprite.Sprite):
         super(Settings, self).__init__(sprites_dop, all_sprites)
         self.image = pygame.transform.scale(load_image(r'Other\settings.png'), (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = 1920 - 50
+        self.rect.x = screen.get_width() - 50
         self.rect.y = 0
 
     def update(self, pos):
@@ -213,7 +217,8 @@ class Settings(pygame.sprite.Sprite):
 class Map(pygame.sprite.Sprite):
     def __init__(self, image, loc, x, y):
         super(Map, self).__init__(map_group)
-        self.image = pygame.transform.scale(load_image(image), (1920 // len(loc[0]), 1080 // len(loc)))
+        self.image = pygame.transform.scale(load_image(image), (screen.get_width() // len(loc[0]),
+                                                                screen.get_height() // len(loc)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
