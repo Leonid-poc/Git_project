@@ -37,6 +37,7 @@ all_sprites = pygame.sprite.Group()
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+fon = pygame.font.Font(None, 100)
 
 # музыка заднего фона
 background_music = pygame.mixer.music
@@ -55,9 +56,11 @@ background = load_image(location[0])
 location_code = JUNGLE
 # задаю скин игрока по дефолту
 pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+# список координат всех квадратов земли на холсте
+map_coords_spisok = []
 
 
-# класс магазина выполняет запуск окошка Магазин
+# класс магазина выполняет функцию окошка Магазин
 class MyShop(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -87,17 +90,23 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
     # метод сччитывает какую локацию выбрал игрок и ставит её
     def run_loc(self):
-        global background, location_code, location
+        global background, location_code, location, background_music
         map_group.empty()
         if self.sender().objectName()[-1] == '4':
             location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
             location_code = JUNGLE
+            background_music.load(r'data\Music\background_1.mp3')
+            background_music.play(-1)
         if self.sender().objectName()[-1] == '5':
             location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
             location_code = WINTER
+            background_music.load(r'data\Music\background_2.mp3')
+            background_music.play(-1)
         if self.sender().objectName()[-1] == '6':
             location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
             location_code = DESERT
+            background_music.load(r'data\Music\background_3.mp3')
+            background_music.play(-1)
         background = load_image(location[0])
         draw_map()
 
@@ -112,6 +121,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
             pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (120, 180))
 
 
+# класс настроек выполняет функцию окошка Настройки
 class MySettings(QMainWindow, Ui_MainWindow_1):
     def __init__(self):
         super().__init__()
@@ -127,6 +137,7 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
 
         self.label_2.setPixmap(self.pixmap[1])
 
+    # большой метод проверяет базовые настройки ползовательского решения
     def run(self):
         global background_music
         with open('volume.txt', mode='r', encoding='utf-8') as txt:
@@ -162,6 +173,7 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             txt.write(f'{self.horizontalSlider.value()} {self.horizontalSlider_2.value()}'
                       f' {self.num_vol_music} {self.num_vol_effects}')
 
+    # метод загружает эти настройки когда пользователь только запустил игру
     def save_vol(self):
         global background_music
         with open('volume.txt', mode='r', encoding='utf-8') as text:
@@ -175,11 +187,11 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             self.horizontalSlider_2.setValue(int(text[1]))
             self.lcdNumber_2.display(int(text[1]))
 
-
+# проверка ошибок
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
-
+# запуск окна Магазина
 def qt_start_shop():
     app = QApplication(sys.argv)
     ex = MyShop()
@@ -187,7 +199,7 @@ def qt_start_shop():
     sys.excepthook = except_hook
     app.exec()
 
-
+# запуск окна Настроек
 def qt_start_settings():
     app = QApplication(sys.argv)
     ex = MySettings()
@@ -196,9 +208,10 @@ def qt_start_settings():
     sys.excepthook = except_hook
     app.exec()
 
-
+# отрисовка карты
 def draw_map():
     for i in enumerate(location_code):
+        map_coords_spisok.clear()
         for j in enumerate(i[1]):
             if j[1] == 'q':
                 Map(location[1], location_code, screen.get_width() // len(location_code[0]) * j[0],
@@ -207,7 +220,7 @@ def draw_map():
                 Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0],
                     screen.get_height() // len(location_code) * i[0])
 
-
+# класс отвечающий за отрисовку иконки магазина на холсте
 class Shop(pygame.sprite.Sprite):
     def __init__(self):
         super(Shop, self).__init__(sprites_dop, all_sprites)
@@ -226,7 +239,7 @@ class Shop(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             qt_start_shop()
 
-
+# класс отвечающий за отрисовку иконки настроек на холсте
 class Settings(pygame.sprite.Sprite):
     def __init__(self):
         super(Settings, self).__init__(sprites_dop, all_sprites)
@@ -239,12 +252,14 @@ class Settings(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             qt_start_settings()
 
-
+# класс который зависит от метода draw_map
 class Map(pygame.sprite.Sprite):
     def __init__(self, image, loc, x, y):
+        global map_coords_spisok
         super(Map, self).__init__(map_group)
         self.image = pygame.transform.scale(load_image(image),
                                             (screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
+        map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
