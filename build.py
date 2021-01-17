@@ -6,12 +6,10 @@ from UI_settings import Ui_MainWindow_1
 from map import *
 from Settings import *
 from Load_image import load_image
+
 # инициализируем пайгем и звук из пайгейма
 pygame.init()
 pygame.mixer.init()
-
-
-
 
 
 # класс магазина выполняет функцию окошка Магазин
@@ -141,9 +139,11 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             self.horizontalSlider_2.setValue(int(text[1]))
             self.lcdNumber_2.display(int(text[1]))
 
+
 # проверка ошибок
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
+
 
 # запуск окна Магазина
 def qt_start_shop():
@@ -153,6 +153,7 @@ def qt_start_shop():
     sys.excepthook = except_hook
     app.exec()
 
+
 # запуск окна Настроек
 def qt_start_settings():
     app = QApplication(sys.argv)
@@ -161,6 +162,7 @@ def qt_start_settings():
     ex.show()
     sys.excepthook = except_hook
     app.exec()
+
 
 # отрисовка карты
 def draw_map():
@@ -173,6 +175,7 @@ def draw_map():
             if j[1] == 'w':
                 Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
                     screen.get_height() // len(location_code) * i[0] + 10)
+
 
 # класс отвечающий за отрисовку иконки магазина на холсте
 class Shop(pygame.sprite.Sprite):
@@ -189,9 +192,13 @@ class Shop(pygame.sprite.Sprite):
     def return_skin(self):
         return pers
 
+    def return_mirror_skin(self):
+        return pygame.transform.flip(pers, True, False)
+
     def update(self, pos):
         if self.rect.collidepoint(pos):
             qt_start_shop()
+
 
 # класс отвечающий за отрисовку иконки настроек на холсте
 class Settings(pygame.sprite.Sprite):
@@ -213,7 +220,8 @@ class Map(pygame.sprite.Sprite):
         global map_coords_spisok
         super(Map, self).__init__(map_group)
         self.image = pygame.transform.scale(load_image(image),
-                                            (screen.get_width() // len(location_code[0]), screen.get_height() // len(location_code)))
+                                            (screen.get_width() // len(location_code[0]),
+                                             screen.get_height() // len(location_code)))
         # map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
         self.rect = self.image.get_rect()
         self.rect.x = x

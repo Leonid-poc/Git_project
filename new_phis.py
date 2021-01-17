@@ -4,9 +4,14 @@ import pygame
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
+print("Леня, привет")
+
 
 # класс игрока который отвечает за любые события и изменения персонажа
 class Player(pygame.sprite.Sprite):
+    left_pers =False
+    right_pers = True
+
     def __init__(self):
         super(Player, self).__init__(all_sprites, player_group)
         self.image = pers
@@ -17,6 +22,17 @@ class Player(pygame.sprite.Sprite):
 
     def return_now_skin(self):
         return self.image
+
+    def proof_pos(self):
+        for i in map_coords_spisok:
+            if self.rect.x + self.rect.width > i[0] and self.rect.y + self.rect.height > i[1]:
+                return False
+            if i[0] + i[2] > self.rect.x and i[1] + i[3] > self.rect.y:
+                return False
+            return True
+
+    def povorot_pers(self):
+        return (self.left_pers, self.right_pers)
 
     def update(self, image):
         if self.image != image:
@@ -52,18 +68,11 @@ class Player(pygame.sprite.Sprite):
                     self.count_jump = 20
 
 
-class Projectale(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Projectale, self).__init__(all_sprites, projectales)
-        pass
-
-
 # вызываю определённые классы которые автоматически отрисовывваются
 vremenaya = Shop()
 Settings()
 just_comfort = Player()
 draw_map()
-
 
 while True:
     # Основной цикл, куда уж без него, если ты читал комментарии до этого, ты должен всё понять
@@ -75,8 +84,12 @@ while True:
             sprites_dop.update(i.pos)
         if i.type == pygame.QUIT or KEYS[pygame.K_F10]:
             sys.exit()
-    if just_comfort.return_now_skin() != vremenaya.return_skin():
-        player_group.update(vremenaya.return_skin())
+
+    if just_comfort.return_now_skin() not in (vremenaya.return_skin()):
+        if KEYS[pygame.K_d]:
+            player_group.update(vremenaya.return_skin())
+        if KEYS[pygame.K_a]:
+            player_group.update(vremenaya.return_mirror_skin())
     player_group.update(just_comfort.return_now_skin())
 
     ren_fon = fon.render(f'{int(clock.get_fps())}', True, (255, 255, 255))
