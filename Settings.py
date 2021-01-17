@@ -14,7 +14,7 @@ all_sprites = pygame.sprite.Group()
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-fon = pygame.font.Font(None, 100)
+FONT = pygame.font.Font(None, 100)
 
 # музыка заднего фона
 background_music = pygame.mixer.music

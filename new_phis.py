@@ -23,7 +23,6 @@ class Player(pygame.sprite.Sprite):
             self.image = image
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = 0, 745
-            print(self.rect.y)
         if not pygame.sprite.spritecollideany(self, map_group) and not self.jumping:
             self.rect.y += 5
         if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
@@ -53,15 +52,25 @@ class Player(pygame.sprite.Sprite):
 
 
 class Projectale(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, person):
         super(Projectale, self).__init__(all_sprites, projectales)
-        pass
+        self.pers_pos_x, self.pers_pos_y = person.get_rect()
+        self.image = pygame.transform.scale(load_image(r'Other\ball.png'), (60, 40))
+        self.rect = self.image.get_rect()
+
+
+    def shot(self):
+        # self.pos = self.image.get_rect()
+        self.rect.x += 10
+
+        projectales.update(self.image)
+
 
 
 # вызываю определённые классы которые автоматически отрисовывваются
-vremenaya = Shop()
+Shop()
 Settings()
-just_comfort = Player()
+Player = Player()
 draw_map()
 
 
@@ -69,21 +78,21 @@ while True:
     # Основной цикл, куда уж без него, если ты читал комментарии до этого, ты должен всё понять
     # Есть баг с нажатием пробела (110, 112 строчки), помоги исправить, плез, перс улетает в потолок
     KEYS = pygame.key.get_pressed()
-    screen.blit(vremenaya.return_background(), (0, 0))
+    screen.blit(return_background(), (0, 0))
     for i in pygame.event.get():
         if i.type == pygame.MOUSEBUTTONDOWN:
             sprites_dop.update(i.pos)
         if i.type == pygame.QUIT or KEYS[pygame.K_F10]:
             sys.exit()
-    if just_comfort.return_now_skin() != vremenaya.return_skin():
-        player_group.update(vremenaya.return_skin())
-    player_group.update(just_comfort.return_now_skin())
+    if Player.return_now_skin() != return_skin():
+        player_group.update(return_skin())
+    player_group.update(Player.return_now_skin())
 
-    ren_fon = fon.render(f'{int(clock.get_fps())}', True, (255, 255, 255))
-    screen.blit(ren_fon, (0, 0))
-
+    ren_font = FONT.render(f'{int(clock.get_fps())}', True, (255, 255, 255))
+    screen.blit(ren_font, (0, 0))
+    Projectale.shot(Projectale)
     all_sprites.draw(screen)
     map_group.draw(screen)
-
+    projectales.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)

@@ -162,6 +162,12 @@ def qt_start_settings():
     sys.excepthook = except_hook
     app.exec()
 
+def return_background():
+    return background
+
+def return_skin():
+    return pers
+
 # отрисовка карты
 def draw_map():
     for i in enumerate(location_code):
@@ -183,11 +189,7 @@ class Shop(pygame.sprite.Sprite):
         self.rect.x = screen.get_width() - 100
         self.rect.y = 0
 
-    def return_background(self):
-        return background
 
-    def return_skin(self):
-        return pers
 
     def update(self, pos):
         if self.rect.collidepoint(pos):
