@@ -4,7 +4,7 @@ import pygame
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
-
+print("Леня, привет")
 # класс игрока который отвечает за любые события и изменения персонажа
 class Player(pygame.sprite.Sprite):
     def __init__(self):
