@@ -4,7 +4,7 @@ import pygame
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
-print("Леня, привет")
+
 # класс игрока который отвечает за любые события и изменения персонажа
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -17,14 +17,6 @@ class Player(pygame.sprite.Sprite):
 
     def return_now_skin(self):
         return self.image
-
-    def proof_pos(self):
-        for i in map_coords_spisok:
-            if self.rect.x + self.rect.width > i[0] and self.rect.y + self.rect.height > i[1]:
-                return False
-            if i[0] + i[2] > self.rect.x and i[1] + i[3] > self.rect.y:
-                return False
-            return True
 
     def update(self, image):
         if self.image != image:
@@ -58,6 +50,12 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.jumping = False
                     self.count_jump = 20
+
+
+class Projectale(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Projectale, self).__init__(all_sprites, projectales)
+        pass
 
 
 # вызываю определённые классы которые автоматически отрисовывваются

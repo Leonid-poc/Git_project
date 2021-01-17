@@ -1,63 +1,17 @@
 import sys, os, pygame
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPixmap
-from shop import Ui_MainWindow
-from settings import Ui_MainWindow_1
+from UI_shop import Ui_MainWindow
+from UI_settings import Ui_MainWindow_1
 from map import *
-
+from Settings import *
+from Load_image import load_image
 # инициализируем пайгем и звук из пайгейма
 pygame.init()
 pygame.mixer.init()
 
 
-# функция для адекватной загрузки картинок
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
 
-
-# ссоздаю группу спрайтов котораая нам понадобится в будущем
-sprites_dop = pygame.sprite.Group()
-player_group = pygame.sprite.Group()
-map_group = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
-
-# задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
-FPS = 60
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-fon = pygame.font.Font(None, 100)
-
-# музыка заднего фона
-background_music = pygame.mixer.music
-background_music.load(r'data\Music\background_1.mp3')
-background_music.play(-1)
-# придаю ей начальные настройки при запуске игры
-with open('volume.txt', encoding='utf-8', mode='r') as text:
-    txt = text.read().split()
-    background_music.set_volume(int(txt[0]) / 100)
-
-# загружаю стартовую локацию при запуске игры
-location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
-# загружаю задний фон по дефолту
-background = load_image(location[0])
-# задаю карту из списка по дефолту
-location_code = JUNGLE
-# задаю скин игрока по дефолту
-pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
-# список координат всех квадратов земли на холсте
-map_coords_spisok = []
 
 
 # класс магазина выполняет функцию окошка Магазин
@@ -252,14 +206,15 @@ class Settings(pygame.sprite.Sprite):
         if self.rect.collidepoint(pos):
             qt_start_settings()
 
+
 # класс который зависит от метода draw_map
 class Map(pygame.sprite.Sprite):
-    def __init__(self, image, loc, x, y):
+    def __init__(self, image, location_code, x, y):
         global map_coords_spisok
         super(Map, self).__init__(map_group)
         self.image = pygame.transform.scale(load_image(image),
-                                            (screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
-        map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
+                                            (screen.get_width() // len(location_code[0]), screen.get_height() // len(location_code)))
+        # map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
