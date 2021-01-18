@@ -24,7 +24,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                            QPixmap(r'data\Desert\desert.png').scaled(267, 150)]
         self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png'),
                             QPixmap(r'data\Winter\winter_mainhero.png').scaled(145, 235),
-                            QPixmap(r'data\Desert\desert_mainhero.png').scaled(145, 235)]
+                            QPixmap(r'data\Desert\desert_mainhero_for_shop.png').scaled(145, 235)]
 
         # присваиваю всемю функционал и картинки
         self.label_4.setPixmap(self.pixmap_loc[0])
@@ -70,7 +70,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
         if self.sender().objectName()[-1] == '3':
-            pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (120, 180))
+            pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
 
 
 # класс настроек выполняет функцию окошка Настройки
@@ -222,7 +222,9 @@ class Map(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(load_image(image),
                                             (screen.get_width() // len(location_code[0]),
                                              screen.get_height() // len(location_code)))
-        # map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
+        map_coords_spisok.append((x, y, screen.get_width() // len(location_code[0]),
+                                  screen.get_height() // len(location_code)))
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
