@@ -67,10 +67,17 @@ class MyShop(QMainWindow, Ui_MainWindow):
         global pers
         if self.sender().objectName()[-1] == 'n':
             pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
+                    pygame.transform.flip(load_image('Other\\fireball2.png'), True, False)]
+
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
+                    pygame.transform.flip(load_image('Other\\fireball1.png'), True, False)]
         if self.sender().objectName()[-1] == '3':
             pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
+                    pygame.transform.flip(load_image('Other\\bullet.png'), True, False)]
 
 
 # класс настроек выполняет функцию окошка Настройки
@@ -192,9 +199,6 @@ class Shop(pygame.sprite.Sprite):
     def return_skin(self):
         return pers
 
-    def return_mirror_skin(self):
-        return pygame.transform.flip(pers, True, False)
-
     def update(self, pos):
         if self.rect.collidepoint(pos):
             qt_start_shop()
@@ -218,12 +222,11 @@ class Settings(pygame.sprite.Sprite):
 class Map(pygame.sprite.Sprite):
     def __init__(self, image, location_code, x, y):
         global map_coords_spisok
-        super(Map, self).__init__(map_group)
+        super(Map, self).__init__(map_group, all_sprites)
         self.image = pygame.transform.scale(load_image(image),
                                             (screen.get_width() // len(location_code[0]),
                                              screen.get_height() // len(location_code)))
-        map_coords_spisok.append((x, y, screen.get_width() // len(location_code[0]),
-                                  screen.get_height() // len(location_code)))
+        map_coords_spisok.append(y)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = x

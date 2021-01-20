@@ -1,6 +1,7 @@
 from map import *
 # инициализируем пайгем и звук из пайгейма
 import pygame
+import random as rg
 from Load_image import load_image
 pygame.init()
 pygame.mixer.init()
@@ -9,12 +10,13 @@ sprites_dop = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 map_group = pygame.sprite.Group()
 projectales = pygame.sprite.Group()
+mod_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-fon = pygame.font.Font(None, 100)
+FONT = pygame.font.Font(None, 100)
 
 # музыка заднего фона
 background_music = pygame.mixer.music
@@ -33,6 +35,8 @@ background = load_image(location[0])
 location_code = JUNGLE
 # задаю скин игрока по дефолту
 pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
+        pygame.transform.flip(load_image('Other\\fireball2.png'), True, False)]
 # список координат всех квадратов земли на холсте
 map_coords_spisok = []
 
