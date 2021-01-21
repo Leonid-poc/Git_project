@@ -94,7 +94,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= 5
 
         # выстрел
-        if KEYS[pygame.K_q] and self.count_shoot >= 10:
+        if KEYS[pygame.K_q] and self.count_shoot >= 50:
+            self.spisok_animation[4].play(1)
             self.count_shoot = 0
             left_or_right_x = False if self.left_pers else True
             if self.god_mode:
@@ -155,6 +156,7 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y -= 1
 
     def update(self):
+        global COUNT_MONEY
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
         if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
@@ -162,6 +164,7 @@ class Mob(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= 60
             if self.NOW_HP == 0:
+                COUNT_MONEY += rg.choice(range(1, 6))
                 self.kill()
                 Mob(400, 0)
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
@@ -194,6 +197,7 @@ class Mob(pygame.sprite.Sprite):
 # вызываю определённые классы которые автоматически отрисовывваются
 shop_for_circle = Shop()
 Settings()
+Money()
 Player1 = Player(0, 500, pers)
 draw_map()
 mob = Mob(1000, 200)
@@ -228,7 +232,10 @@ while True:
 
     all_sprites.draw(screen)
     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
+    money_fon = FONT.render(str(COUNT_MONEY), True, (123, 104, 238))
+    rect_money = money_fon.get_rect()
     screen.blit(ren_fon, (0, 0))
+    screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
 
     # Смена кадра
     pygame.display.flip()
