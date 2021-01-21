@@ -1,6 +1,7 @@
 from map import *
 # инициализируем пайгем и звук из пайгейма
 import pygame
+from pprint import pprint
 import random as rg
 from Load_image import load_image
 pygame.init()
@@ -17,7 +18,8 @@ all_sprites = pygame.sprite.Group()
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-FONT = pygame.font.Font(None, 50)
+FONT = pygame.font.SysFont('estrangeloedessa', 50)
+pprint(pygame.font.get_fonts())
 COUNT_MONEY = 0
 
 # музыка заднего фона

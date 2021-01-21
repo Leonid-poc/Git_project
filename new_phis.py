@@ -82,20 +82,19 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
 
         # когда персонаж идёт налево выполняется смена опаределённой картинки
-        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
+        if KEYS[pygame.K_RIGHT] and self.rect.x + self.rect.width <= screen.get_width():
             self.right_pers, self.left_pers = True, False
             self.image = self.spisok_animation[0]
             self.rect.x += 5
 
         # когда персонаж идёт направо выполняется смена опаределённой картинки
-        if KEYS[pygame.K_a] and self.rect.x >= 0:
+        if KEYS[pygame.K_LEFT] and self.rect.x >= 0:
             self.right_pers, self.left_pers = False, True
             self.image = self.spisok_animation[1]
             self.rect.x -= 5
 
         # выстрел
-        if KEYS[pygame.K_q] and self.count_shoot >= 50:
-            self.spisok_animation[4].play(1)
+        if KEYS[pygame.K_q] and self.count_shoot >= 20:
             self.count_shoot = 0
             left_or_right_x = False if self.left_pers else True
             if self.god_mode:
@@ -105,6 +104,7 @@ class Player(pygame.sprite.Sprite):
                     self.time_to_shoot += 300
                     if self.NOW_MANA >= 20:
                         self.NOW_MANA -= 20
+                        self.spisok_animation[4].play(1)
                         Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
 
         # сам прыжок не вникайте тут чистая математика))
@@ -168,7 +168,7 @@ class Mob(pygame.sprite.Sprite):
                 self.kill()
                 Mob(400, 0)
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-            self.jumping = rg.choice(range(200))
+            self.jumping = rg.choice(range(100))
         if self.jumping == 10:
             if self.count_jump >= -20:
                 if self.count_jump < 0:
@@ -232,7 +232,7 @@ while True:
 
     all_sprites.draw(screen)
     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
-    money_fon = FONT.render(str(COUNT_MONEY), True, (123, 104, 238))
+    money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
     rect_money = money_fon.get_rect()
     screen.blit(ren_fon, (0, 0))
     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
