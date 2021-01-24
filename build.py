@@ -6,12 +6,10 @@ from UI_settings import Ui_MainWindow_1
 from map import *
 from Settings import *
 from Load_image import load_image
+
 # инициализируем пайгем и звук из пайгейма
 pygame.init()
 pygame.mixer.init()
-
-
-
 
 
 # класс магазина выполняет функцию окошка Магазин
@@ -26,7 +24,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                            QPixmap(r'data\Desert\desert.png').scaled(267, 150)]
         self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png'),
                             QPixmap(r'data\Winter\winter_mainhero.png').scaled(145, 235),
-                            QPixmap(r'data\Desert\desert_mainhero.png').scaled(145, 235)]
+                            QPixmap(r'data\Desert\desert_mainhero_for_shop.png').scaled(145, 235)]
 
         # присваиваю всемю функционал и картинки
         self.label_4.setPixmap(self.pixmap_loc[0])
@@ -66,13 +64,26 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
     # метод который ставит персонажа который выбрал пользователь
     def run_pers(self):
-        global pers
+        global pers, player_shoot_mus
         if self.sender().objectName()[-1] == 'n':
             pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+            player_shoot_mus.load(r'data\Music\posoh_shoot_green.mp3')
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
+                    pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
+                    player_shoot_mus]
+
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
+            player_shoot_mus.load(r'data\Music\posoh_shoot_white.mp3')
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
+                    pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
+                    player_shoot_mus]
         if self.sender().objectName()[-1] == '3':
-            pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (120, 180))
+            pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
+            player_shoot_mus.load(r'data\Music\bullet_shoot.mp3')
+            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
+                    pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
+                    player_shoot_mus]
 
 
 # класс настроек выполняет функцию окошка Настройки
@@ -93,7 +104,7 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
 
     # большой метод проверяет базовые настройки ползовательского решения
     def run(self):
-        global background_music
+        global background_music, player_shoot_mus
         with open('volume.txt', mode='r', encoding='utf-8') as txt:
             text = txt.read().split()
             self.num_vol_effects, self.num_vol_music = int(text[3]), int(text[2])
@@ -123,13 +134,14 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
                     self.label.setPixmap(self.pixmap[self.num_vol_music])
 
         background_music.set_volume(self.horizontalSlider.value() / 100)
+        player_shoot_mus.set_volume(self.horizontalSlider_2.value() / 100)
         with open('volume.txt', mode='w', encoding='utf-8') as txt:
             txt.write(f'{self.horizontalSlider.value()} {self.horizontalSlider_2.value()}'
                       f' {self.num_vol_music} {self.num_vol_effects}')
 
     # метод загружает эти настройки когда пользователь только запустил игру
     def save_vol(self):
-        global background_music
+        global background_music, player_shoot_mus
         with open('volume.txt', mode='r', encoding='utf-8') as text:
             text = text.read().split()
             if len(text) <= 2:
@@ -140,10 +152,14 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             self.lcdNumber.display(int(text[0]))
             self.horizontalSlider_2.setValue(int(text[1]))
             self.lcdNumber_2.display(int(text[1]))
+            background_music.set_volume(self.horizontalSlider.value() / 100)
+            player_shoot_mus.set_volume(self.horizontalSlider_2.value() / 100)
+
 
 # проверка ошибок
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
+
 
 # запуск окна Магазина
 def qt_start_shop():
@@ -152,6 +168,7 @@ def qt_start_shop():
     ex.show()
     sys.excepthook = except_hook
     app.exec()
+
 
 # запуск окна Настроек
 def qt_start_settings():
@@ -162,11 +179,6 @@ def qt_start_settings():
     sys.excepthook = except_hook
     app.exec()
 
-def return_background():
-    return background
-
-def return_skin():
-    return pers
 
 # отрисовка карты
 def draw_map():
@@ -180,6 +192,7 @@ def draw_map():
                 Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
                     screen.get_height() // len(location_code) * i[0] + 10)
 
+
 # класс отвечающий за отрисовку иконки магазина на холсте
 class Shop(pygame.sprite.Sprite):
     def __init__(self):
@@ -189,11 +202,16 @@ class Shop(pygame.sprite.Sprite):
         self.rect.x = screen.get_width() - 100
         self.rect.y = 0
 
+    def return_background(self):
+        return background
 
+    def return_skin(self):
+        return pers
 
     def update(self, pos):
         if self.rect.collidepoint(pos):
             qt_start_shop()
+
 
 # класс отвечающий за отрисовку иконки настроек на холсте
 class Settings(pygame.sprite.Sprite):
@@ -213,10 +231,12 @@ class Settings(pygame.sprite.Sprite):
 class Map(pygame.sprite.Sprite):
     def __init__(self, image, location_code, x, y):
         global map_coords_spisok
-        super(Map, self).__init__(map_group)
+        super(Map, self).__init__(map_group, all_sprites)
         self.image = pygame.transform.scale(load_image(image),
-                                            (screen.get_width() // len(location_code[0]), screen.get_height() // len(location_code)))
-        # map_coords_spisok.append((x, y, screen.get_width() // len(loc[0]), screen.get_height() // len(loc)))
+                                            (screen.get_width() // len(location_code[0]),
+                                             screen.get_height() // len(location_code)))
+        map_coords_spisok.append(y)
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
