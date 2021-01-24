@@ -36,14 +36,29 @@ class Money(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = screen.get_width() - 150
         self.rect.y = 0
-        self.count_money = 0
-        self.vivod_money = FONT.render(f'{self.count_money}', True, (123, 104, 238))
-        self.rect_money = self.vivod_money.get_rect()
-        screen.blit(self.vivod_money, (screen.get_width() - 150 - self.rect_money.w, 0))
+
+class Monetki_from_mob(pygame.sprite.Sprite):
+    def __init__(self, x, y, w, h):
+        super(Monetki_from_mob, self).__init__(all_sprites, mod_group)
+        self.image = pygame.transform.scale(load_image(r'Other\gold.png'), (50, 50))
+        self.rect = self.image.get_rect()
+        self.step = 100
+        self.rect.x = x + (w / 2) - (self.rect.w / 2)
+        self.rect.y = y + (h / 2) - (self.rect.h / 2)
+        self.way_x = (screen.get_width() - 25 - (self.rect.x + self.rect.w / 2)) / self.step
+        self.way_y = -(self.rect.y + self.rect.h / 2) / self.step
 
     def update(self):
-        self.vivod_money = FONT.render(f'{self.count_money}', True, (123, 104, 238))
-        screen.blit(self.vivod_money, (screen.get_width() - 150 - self.rect_money.w, 10))
+        global COUNT_MONEY
+        if pygame.sprite.spritecollideany(self, money_group):
+            self.kill()
+            COUNT_MONEY += rg.choice(range(1, 6))
+        else:
+            self.rect.x += self.way_x
+            self.rect.y += self.way_y
+
+
+
 
 
 class Indicator:

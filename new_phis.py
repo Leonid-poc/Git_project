@@ -62,6 +62,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, image):
         # проверка что скин не меняли через QT
+
         if self.spisok_animation != image:
             x, y = self.rect.x, self.rect.y
             self.spisok_animation = image
@@ -159,7 +160,6 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y -= 1
 
     def update(self):
-        global COUNT_MONEY
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
         if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
@@ -168,8 +168,8 @@ class Mob(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= 60
             if self.NOW_HP == 0:
-                COUNT_MONEY += rg.choice(range(1, 6))
                 self.kill()
+                Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
                 Mob(400, 0)
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
             self.jumping = rg.choice(range(100))
