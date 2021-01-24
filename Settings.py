@@ -28,8 +28,8 @@ background_music = pygame.mixer.music
 background_music.load(r'data\Music\background_1.mp3')
 background_music.play(-1)
 
-player_shoot_mus = pygame.mixer.music
-player_shoot_mus.load(r'data\Music\posoh_shoot_green.mp3')
+
+player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
 
 # придаю ей начальные настройки при запуске игры
 with open('volume.txt', encoding='utf-8', mode='r') as text:

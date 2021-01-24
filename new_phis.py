@@ -110,7 +110,7 @@ class Player(pygame.sprite.Sprite):
                         self.time_to_shoot += 300
                         if self.NOW_MANA >= 20:
                             self.NOW_MANA -= 20
-                            self.spisok_animation[4].play(1)
+                            self.spisok_animation[4].play()
                             Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
 
         # прыжок
@@ -143,7 +143,11 @@ class Player(pygame.sprite.Sprite):
 class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Mob, self).__init__(mod_group, all_sprites)
-        self.image = pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180))
+        self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
+                                 pygame.transform.flip(
+                                     pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
+                                     False)]
+        self.image = self.spisok_animation[0]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.START_HP = 180
@@ -168,12 +172,13 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y += 5
         if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
             self.vx = -self.vx
+            self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= 60
             if self.NOW_HP == 0:
                 COUNT_MONEY += rg.choice(range(3, 6))
                 self.kill()
-
+                Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
 
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
             self.jumping = rg.choice(range(100))
