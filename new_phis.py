@@ -12,7 +12,6 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__(all_sprites, player_group)
         # задаю главные переменные
         self.spisok_animation = pers
-        print(self.spisok_animation[0])
         self.image = self.spisok_animation[0]
         self.mask = pygame.mask.from_surface(self.image)
         self.count_jump = 20
@@ -54,15 +53,18 @@ class Player(pygame.sprite.Sprite):
 
     # восстановление маны
     def up_mana(self):
-        if self.NOW_MANA != self.START_MANA:
-            self.time_to_restart_mana += 1
-            if self.time_to_restart_mana == 100:
-                self.time_to_restart_mana = 0
-                self.NOW_MANA += 20
+        if self.NOW_HP >0:
+            if self.NOW_MANA != self.START_MANA:
+                self.time_to_restart_mana += 1
+                if self.time_to_restart_mana == 100:
+                    self.time_to_restart_mana = 0
+                    self.NOW_MANA += 20
+        else:
+            self.NOW_MANA = 0
+
 
     def update(self, image):
         # проверка что скин не меняли через QT
-
         if self.spisok_animation != image:
             x, y = self.rect.x, self.rect.y
             self.spisok_animation = image
@@ -83,33 +85,35 @@ class Player(pygame.sprite.Sprite):
         if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
             self.jumping = True
 
-        # когда персонаж идёт налево выполняется смена опаределённой картинки
+        # когда персонаж идёт направо выполняется смена опаределённой картинки
         if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
             self.right_pers, self.left_pers = True, False
             self.image = self.spisok_animation[0]
             self.rect.x += 5
 
-        # когда персонаж идёт направо выполняется смена опаределённой картинки
+        # когда персонаж идёт налево выполняется смена опаределённой картинки
         if KEYS[pygame.K_a] and self.rect.x >= 0:
             self.right_pers, self.left_pers = False, True
             self.image = self.spisok_animation[1]
             self.rect.x -= 5
 
         # выстрел
-        if KEYS[pygame.K_q] and self.count_shoot >= 20:
-            self.count_shoot = 0
+        if KEYS[pygame.K_q]:
             left_or_right_x = False if self.left_pers else True
             if self.god_mode:
                 Projectale(self, self.rect, True, left_or_right_x, self.spisok_animation)
             else:
-                if self.time_to_shoot <= 0:
-                    self.time_to_shoot += 300
-                    if self.NOW_MANA >= 20:
-                        self.NOW_MANA -= 20
-                        self.spisok_animation[4].play()
-                        Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+                if self.count_shoot >= 20:
+                    self.count_shoot = 0
+                    left_or_right_x = False if self.left_pers else True
+                    if self.time_to_shoot <= 0:
+                        self.time_to_shoot += 300
+                        if self.NOW_MANA >= 20:
+                            self.NOW_MANA -= 20
+                            self.spisok_animation[4].play()
+                            Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
 
-        # сам прыжок не вникайте тут чистая математика))
+        # прыжок
         if self.jumping:
             if self.count_jump >= -20:
                 if self.count_jump < 0:
@@ -140,7 +144,9 @@ class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Mob, self).__init__(mod_group, all_sprites)
         self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
-                                 pygame.transform.flip(pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True, False)]
+                                 pygame.transform.flip(
+                                     pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
+                                     False)]
         self.image = self.spisok_animation[0]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
@@ -155,11 +161,13 @@ class Mob(pygame.sprite.Sprite):
         self.count_jump = 20
         self.vx = rg.choice(range(5, 10))
 
+
     def proof_font_fall_out_map(self):
         while self.rect.bottom > map_coords_spisok[0]:
             self.rect.y -= 1
 
     def update(self):
+        global COUNT_MONEY
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
         if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
@@ -168,9 +176,10 @@ class Mob(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= 60
             if self.NOW_HP == 0:
+                COUNT_MONEY += rg.choice(range(3, 6))
                 self.kill()
                 Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
-                Mob(400, 0)
+
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
             self.jumping = rg.choice(range(100))
         if self.jumping == 10:
@@ -204,7 +213,10 @@ Settings()
 Money()
 Player1 = Player(0, 500, pers)
 draw_map()
-mob = Mob(1000, 200)
+moobs = []
+for i in range(5):
+    moobs.append(Mob(1700, 0))
+
 
 while True:
     screen.blit(shop_for_circle.return_background(), (0, 0))
@@ -221,13 +233,16 @@ while True:
     if not Player1.god_mode:
         Player1.time_to_shoot -= 10
     # Отрисовка кол-ва хп и маны
-    ind_hp = Indicator(Player1.NOW_HP, Player1.START_HP, (255, 0, 0), 100, 0)
+    ind_hp = Indicator(Player1.NOW_HP, Player1.START_HP, (255, 0, 0), 100, 0, 140, 65)
     ind_hp.show()
-    ind_mana = Indicator(Player1.NOW_MANA, Player1.START_MANA, (0, 0, 255), 260, 0)
+    ind_mana = Indicator(Player1.NOW_MANA, Player1.START_MANA, (0, 0, 255), 260, 0, 140, 65)
     ind_mana.show()
 
     # Восполнение маны
     Player1.up_mana()
+    for mob in moobs:
+        if mob.NOW_HP != 0:
+            Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
     # Отрисовка спрайтов
     player_group.update(shop_for_circle.return_skin())
@@ -240,7 +255,8 @@ while True:
     rect_money = money_fon.get_rect()
     screen.blit(ren_fon, (0, 0))
     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
-
+    with open("MONEY.txt", encoding="utf-8", mode="w") as mn:
+        mn.write(str(COUNT_MONEY))
     # Смена кадра
     pygame.display.flip()
     clock.tick(FPS)

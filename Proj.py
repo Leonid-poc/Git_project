@@ -29,14 +29,6 @@ class Projectale(pygame.sprite.Sprite):
             self.kill()
 
 
-class Money(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Money, self).__init__(all_sprites, money_group)
-        self.image = pygame.transform.scale(load_image(r'Other\poket_money.png'), (50, 50))
-        self.rect = self.image.get_rect()
-        self.rect.x = screen.get_width() - 150
-        self.rect.y = 0
-
 class Monetki_from_mob(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h):
         super(Monetki_from_mob, self).__init__(all_sprites, mod_group)
@@ -49,29 +41,36 @@ class Monetki_from_mob(pygame.sprite.Sprite):
         self.way_y = -(self.rect.y + self.rect.h / 2) / self.step
 
     def update(self):
-        global COUNT_MONEY
         if pygame.sprite.spritecollideany(self, money_group):
             self.kill()
-            COUNT_MONEY += rg.choice(range(1, 6))
         else:
             self.rect.x += self.way_x
             self.rect.y += self.way_y
 
 
-
+class Money(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Money, self).__init__(all_sprites, money_group)
+        self.image = pygame.transform.scale(load_image(r'Other\poket_money.png'), (50, 50))
+        self.rect = self.image.get_rect()
+        self.rect.x = screen.get_width() - 150
+        self.rect.y = 0
 
 
 class Indicator:
-    def __init__(self, stat, start_stat, color, x, y):
+    def __init__(self, stat, start_stat, color, x, y, f, r):
         self.stat = stat
         self.start_stat = start_stat
         self.hp_procent = int((self.stat / self.start_stat) * 100) / 100
         self.COLOR_TEXT = (255, 255, 255)
         self.COLOR_PAN = color
         self.x, self.y = x, y
-        self.FOOT, self.ROS = 140, 65
+        self.FOOT, self.ROS = f, r
 
-    def show(self):
+    def obn(self):
         pygame.draw.rect(screen, (self.COLOR_PAN), (self.x, self.y, int(self.FOOT * self.hp_procent), self.ROS))
         pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.FOOT, self.ROS), 5)
+
+    def show(self):
+        self.obn()
         screen.blit(FONT.render(f'{self.stat}', True, self.COLOR_TEXT), (self.x + 15, 5))

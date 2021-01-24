@@ -14,8 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(808, 593)
-        MainWindow.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        MainWindow.resize(800, 600)
+        MainWindow.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(33, 68, 207, 255));")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setEnabled(True)
         self.tabWidget.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(255, 0, 242);")
+"color: rgb(0, 255, 255);")
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Triangular)
         self.tabWidget.setUsesScrollButtons(True)
         self.tabWidget.setTabsClosable(False)
@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.tab)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.label = QtWidgets.QLabel(self.tab)
-        self.label.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label.setLineWidth(1)
         self.label.setText("")
         self.label.setTextFormat(QtCore.Qt.AutoText)
@@ -42,24 +42,24 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
         self.pushButton = QtWidgets.QPushButton(self.tab)
-        self.pushButton.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton.setObjectName("pushButton")
         self.gridLayout_2.addWidget(self.pushButton, 1, 0, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.tab)
         self.pushButton_3.setEnabled(True)
-        self.pushButton_3.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton_3.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton_3.setObjectName("pushButton_3")
         self.gridLayout_2.addWidget(self.pushButton_3, 1, 2, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.tab)
         self.pushButton_2.setEnabled(True)
-        self.pushButton_2.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton_2.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton_2.setObjectName("pushButton_2")
         self.gridLayout_2.addWidget(self.pushButton_2, 1, 1, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.tab)
-        self.label_2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label_2.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label_2.setLineWidth(1)
         self.label_2.setText("")
         self.label_2.setTextFormat(QtCore.Qt.AutoText)
@@ -67,7 +67,7 @@ class Ui_MainWindow(object):
         self.label_2.setObjectName("label_2")
         self.gridLayout_2.addWidget(self.label_2, 0, 1, 1, 1)
         self.label_3 = QtWidgets.QLabel(self.tab)
-        self.label_3.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label_3.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label_3.setLineWidth(1)
         self.label_3.setText("")
         self.label_3.setTextFormat(QtCore.Qt.AutoText)
@@ -81,8 +81,8 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.pushButton_6 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_6.setEnabled(True)
-        self.pushButton_6.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton_6.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton_6.setCheckable(False)
         self.pushButton_6.setChecked(False)
         self.pushButton_6.setAutoDefault(False)
@@ -92,14 +92,14 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.pushButton_6, 1, 2, 1, 1)
         self.pushButton_4 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_4.setEnabled(True)
-        self.pushButton_4.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton_4.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton_4.setObjectName("pushButton_4")
         self.gridLayout_3.addWidget(self.pushButton_4, 1, 0, 1, 1)
         self.pushButton_5 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_5.setEnabled(True)
-        self.pushButton_5.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-"color: rgb(247, 0, 255);")
+        self.pushButton_5.setStyleSheet("background-color: rgb(100, 100, 100);\n"
+"color: rgb(0, 255, 255);")
         self.pushButton_5.setCheckable(False)
         self.pushButton_5.setChecked(False)
         self.pushButton_5.setAutoDefault(False)
@@ -108,7 +108,7 @@ class Ui_MainWindow(object):
         self.pushButton_5.setObjectName("pushButton_5")
         self.gridLayout_3.addWidget(self.pushButton_5, 1, 1, 1, 1)
         self.label_4 = QtWidgets.QLabel(self.tab_2)
-        self.label_4.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label_4.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label_4.setLineWidth(1)
         self.label_4.setText("")
         self.label_4.setTextFormat(QtCore.Qt.AutoText)
@@ -116,7 +116,7 @@ class Ui_MainWindow(object):
         self.label_4.setObjectName("label_4")
         self.gridLayout_3.addWidget(self.label_4, 0, 0, 1, 1)
         self.label_5 = QtWidgets.QLabel(self.tab_2)
-        self.label_5.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label_5.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label_5.setLineWidth(1)
         self.label_5.setText("")
         self.label_5.setTextFormat(QtCore.Qt.AutoText)
@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
         self.label_5.setObjectName("label_5")
         self.gridLayout_3.addWidget(self.label_5, 0, 1, 1, 1)
         self.label_6 = QtWidgets.QLabel(self.tab_2)
-        self.label_6.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));")
+        self.label_6.setStyleSheet("background-color: rgb(100, 100, 100);")
         self.label_6.setLineWidth(1)
         self.label_6.setText("")
         self.label_6.setTextFormat(QtCore.Qt.AutoText)
@@ -135,7 +135,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 808, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

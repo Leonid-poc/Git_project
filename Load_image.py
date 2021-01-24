@@ -1,4 +1,6 @@
-import os, pygame, sys
+import os
+import sys
+import pygame
 
 # функция для адекватной загрузки картинок
 def load_image(name, colorkey=None):
