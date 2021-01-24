@@ -1,7 +1,6 @@
 from map import *
 # инициализируем пайгем и звук из пайгейма
 import pygame
-from pprint import pprint
 import random as rg
 from Load_image import load_image
 pygame.init()
@@ -18,8 +17,7 @@ all_sprites = pygame.sprite.Group()
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-FONT = pygame.font.SysFont('estrangeloedessa', 50)
-pprint(pygame.font.get_fonts())
+FONT = pygame.font.SysFont('rockwell', 50)
 COUNT_MONEY = 0
 
 # музыка заднего фона
@@ -27,8 +25,7 @@ background_music = pygame.mixer.music
 background_music.load(r'data\Music\background_1.mp3')
 background_music.play(-1)
 
-player_shoot_mus = pygame.mixer.music
-player_shoot_mus.load(r'data\Music\posoh_shoot_green.mp3')
+player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
 
 # придаю ей начальные настройки при запуске игры
 with open('volume.txt', encoding='utf-8', mode='r') as text:

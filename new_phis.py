@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__(all_sprites, player_group)
         # задаю главные переменные
         self.spisok_animation = pers
+        print(self.spisok_animation[0])
         self.image = self.spisok_animation[0]
         self.mask = pygame.mask.from_surface(self.image)
         self.count_jump = 20
@@ -82,13 +83,13 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
 
         # когда персонаж идёт налево выполняется смена опаределённой картинки
-        if KEYS[pygame.K_RIGHT] and self.rect.x + self.rect.width <= screen.get_width():
+        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
             self.right_pers, self.left_pers = True, False
             self.image = self.spisok_animation[0]
             self.rect.x += 5
 
         # когда персонаж идёт направо выполняется смена опаределённой картинки
-        if KEYS[pygame.K_LEFT] and self.rect.x >= 0:
+        if KEYS[pygame.K_a] and self.rect.x >= 0:
             self.right_pers, self.left_pers = False, True
             self.image = self.spisok_animation[1]
             self.rect.x -= 5
@@ -104,7 +105,7 @@ class Player(pygame.sprite.Sprite):
                     self.time_to_shoot += 300
                     if self.NOW_MANA >= 20:
                         self.NOW_MANA -= 20
-                        self.spisok_animation[4].play(1)
+                        self.spisok_animation[4].play()
                         Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
 
         # сам прыжок не вникайте тут чистая математика))
@@ -137,7 +138,9 @@ class Player(pygame.sprite.Sprite):
 class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Mob, self).__init__(mod_group, all_sprites)
-        self.image = pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180))
+        self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
+                                 pygame.transform.flip(pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True, False)]
+        self.image = self.spisok_animation[0]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.START_HP = 180
@@ -161,6 +164,7 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y += 5
         if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
             self.vx = -self.vx
+            self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= 60
             if self.NOW_HP == 0:

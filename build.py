@@ -67,20 +67,20 @@ class MyShop(QMainWindow, Ui_MainWindow):
         global pers, player_shoot_mus
         if self.sender().objectName()[-1] == 'n':
             pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
-            player_shoot_mus.load(r'data\Music\posoh_shoot_green.mp3')
+            player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                     pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
                     player_shoot_mus]
 
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
-            player_shoot_mus.load(r'data\Music\posoh_shoot_white.mp3')
+            player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                     pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
                     player_shoot_mus]
         if self.sender().objectName()[-1] == '3':
             pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
-            player_shoot_mus.load(r'data\Music\bullet_shoot.mp3')
+            player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                     pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
                     player_shoot_mus]
