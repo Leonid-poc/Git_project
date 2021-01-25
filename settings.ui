@@ -20,6 +20,14 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QGroupBox" name="groupBox">
+      <property name="font">
+       <font>
+        <family>Rockwell</family>
+        <pointsize>28</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));
 color: rgb(255, 255, 255);</string>
@@ -96,12 +104,20 @@ color: rgb(255, 255, 255);</string>
     </item>
     <item row="0" column="2">
      <widget class="QGroupBox" name="groupBox_2">
+      <property name="font">
+       <font>
+        <family>Rockwell</family>
+        <pointsize>28</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));
 color: rgb(255, 255, 255);</string>
       </property>
       <property name="title">
-       <string>Зввуки эффектов:</string>
+       <string>Звуки эффектов:</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="2" column="0">

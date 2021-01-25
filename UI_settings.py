@@ -21,6 +21,12 @@ class Ui_MainWindow_1(object):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Rockwell")
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBox.setFont(font)
         self.groupBox.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));\n"
 "color: rgb(255, 255, 255);")
         self.groupBox.setObjectName("groupBox")
@@ -54,6 +60,12 @@ class Ui_MainWindow_1(object):
         self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.groupBox, 0, 1, 1, 1)
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Rockwell")
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBox_2.setFont(font)
         self.groupBox_2.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));\n"
 "color: rgb(255, 255, 255);")
         self.groupBox_2.setObjectName("groupBox_2")
@@ -102,4 +114,4 @@ class Ui_MainWindow_1(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow_1.setWindowTitle(_translate("MainWindow_1", "MainWindow"))
         self.groupBox.setTitle(_translate("MainWindow_1", "Звук музыки:"))
-        self.groupBox_2.setTitle(_translate("MainWindow_1", "Зввуки эффектов:"))
+        self.groupBox_2.setTitle(_translate("MainWindow_1", "Звуки эффектов:"))

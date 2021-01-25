@@ -6,15 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>808</width>
-    <height>593</height>
+    <width>733</width>
+    <height>551</height>
    </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="toolTipDuration">
+   <number>-1</number>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -23,9 +38,29 @@
       <property name="enabled">
        <bool>true</bool>
       </property>
+      <property name="font">
+       <font>
+        <family>Rockwell</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 0, 242);</string>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
       </property>
       <property name="tabShape">
        <enum>QTabWidget::Triangular</enum>
@@ -33,10 +68,19 @@ color: rgb(255, 0, 242);</string>
       <property name="currentIndex">
        <number>1</number>
       </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
       </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
       <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
        <bool>false</bool>
       </property>
       <property name="tabBarAutoHide">
@@ -68,6 +112,14 @@ color: rgb(255, 0, 242);</string>
         </item>
         <item row="1" column="0">
          <widget class="QPushButton" name="pushButton">
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>20</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(247, 0, 255);</string>
@@ -82,6 +134,14 @@ color: rgb(247, 0, 255);</string>
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>20</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(247, 0, 255);</string>
@@ -95,6 +155,14 @@ color: rgb(247, 0, 255);</string>
          <widget class="QPushButton" name="pushButton_2">
           <property name="enabled">
            <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>20</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
@@ -155,6 +223,14 @@ color: rgb(247, 0, 255);</string>
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>22</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(247, 0, 255);</string>
@@ -184,6 +260,14 @@ color: rgb(247, 0, 255);</string>
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>22</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(247, 0, 255);</string>
@@ -197,6 +281,14 @@ color: rgb(247, 0, 255);</string>
          <widget class="QPushButton" name="pushButton_5">
           <property name="enabled">
            <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <family>Rockwell</family>
+            <pointsize>22</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(0, 0, 0);
@@ -290,7 +382,7 @@ color: rgb(247, 0, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>808</width>
+     <width>733</width>
      <height>21</height>
     </rect>
    </property>

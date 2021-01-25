@@ -25,6 +25,13 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pixmap_pers = [QPixmap(r'data\Jungle\jungle_mainhero.png'),
                             QPixmap(r'data\Winter\winter_mainhero.png').scaled(145, 235),
                             QPixmap(r'data\Desert\desert_mainhero_for_shop.png').scaled(145, 235)]
+        self.color_no = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
+                    'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));'
+        self.color_yes = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
+                    'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(0, 64, 255, 255));'
+
+        self.color_yes1 = 'color: rgb(176, 0, 255)'
+        self.color_no1 = 'color: rgb:(0, 64, 255)'
 
         # присваиваю всемю функционал и картинки
         self.label_4.setPixmap(self.pixmap_loc[0])
@@ -40,6 +47,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pushButton_5.clicked.connect(self.run_loc)
         self.pushButton_6.clicked.connect(self.run_loc)
 
+        self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
+        self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
+
     # метод сччитывает какую локацию выбрал игрок и ставит её
     def run_loc(self):
         global background, location_code, location, background_music
@@ -49,16 +59,19 @@ class MyShop(QMainWindow, Ui_MainWindow):
             location_code = JUNGLE
             background_music.load(r'data\Music\background_1.mp3')
             background_music.play(-1)
+            self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
         if self.sender().objectName()[-1] == '5':
             location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
             location_code = WINTER
             background_music.load(r'data\Music\background_2.mp3')
             background_music.play(-1)
+            self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
         if self.sender().objectName()[-1] == '6':
             location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
             location_code = DESERT
             background_music.load(r'data\Music\background_3.mp3')
             background_music.play(-1)
+            self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
         background = load_image(location[0])
         draw_map()
 
@@ -71,6 +84,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                     pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
                     player_shoot_mus]
+            self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
 
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
@@ -78,12 +92,23 @@ class MyShop(QMainWindow, Ui_MainWindow):
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                     pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
                     player_shoot_mus]
+            self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
+
         if self.sender().objectName()[-1] == '3':
             pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
             player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                     pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
                     player_shoot_mus]
+            self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
+
+    def pereresovka(self, spisok, spisok_yes_no):
+        exec(f'self.label{spisok[0]}.setStyleSheet(self.color_{spisok_yes_no[0]})')
+        exec(f'self.label{spisok[1]}.setStyleSheet(self.color_{spisok_yes_no[1]})')
+        exec(f'self.label{spisok[2]}.setStyleSheet(self.color_{spisok_yes_no[2]})')
+        exec(f'self.pushButton{spisok[0]}.setStyleSheet(self.color_{spisok_yes_no[0]}1)')
+        exec(f'self.pushButton{spisok[1]}.setStyleSheet(self.color_{spisok_yes_no[1]}1)')
+        exec(f'self.pushButton{spisok[2]}.setStyleSheet(self.color_{spisok_yes_no[2]}1)')
 
 
 # класс настроек выполняет функцию окошка Настройки
@@ -239,5 +264,5 @@ class Map(pygame.sprite.Sprite):
         map_coords_spisok.append(y)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.rect.x = x
+        self.rect.x = x - 10
         self.rect.y = y
