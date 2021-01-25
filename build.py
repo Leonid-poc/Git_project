@@ -49,6 +49,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
             location_code = JUNGLE
             background_music.load(r'data\Music\background_1.mp3')
             background_music.play(-1)
+            self.label_4.setSt
         if self.sender().objectName()[-1] == '5':
             location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
             location_code = WINTER
