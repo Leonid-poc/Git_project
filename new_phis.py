@@ -6,8 +6,8 @@ pygame.init()
 clock = pygame.time.Clock()
 
 class Game_Object(pygame.sprite.Sprite):
-    def __init__(self, x, y, pers):
-        super(Game_Object, self).__init__(all_sprites, player_group)
+    def __init__(self, x, y, pers, group):
+        super(Game_Object, self).__init__(all_sprites, group)
         self.spisok_animation = pers
         self.image = self.spisok_animation[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -33,7 +33,7 @@ class Game_Object(pygame.sprite.Sprite):
 
 class Mob(Game_Object):
     def __init__(self, x, y, pers):
-        super(Mob, self).__init__(x, y, pers)
+        super(Mob, self).__init__(x, y, pers, mod_group)
         self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
                                  pygame.transform.flip(
                                      pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
@@ -95,7 +95,7 @@ class Mob(Game_Object):
 
 class Opr(Game_Object):
     def __init__(self, x, y, pers):
-        super(Opr, self).__init__(x, y, pers)
+        super(Opr, self).__init__(x, y, pers, player_group)
         pass
 
     # метод выдачи режима бога
@@ -126,19 +126,19 @@ class Opr(Game_Object):
     def return_hp(self):
         return self.NOW_HP, self.START_HP
 
-    def update(self):
+    def update(self, image):
         # # проверка что скин не меняли через QT
-        # if self.spisok_animation != image:
-        #     x, y = self.rect.x, self.rect.y
-        #     self.spisok_animation = image
-        #     self.image = self.spisok_animation[0]
-        #     self.rect = self.image.get_rect()
-        #     self.rect.x, self.rect.y = x, y
+        if self.spisok_animation != image:
+            x, y = self.rect.x, self.rect.y
+            self.spisok_animation = image
+            self.image = self.spisok_animation[0]
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = x, y
         # если персонаж в воздухе он плавно спускается как будто на парашуте)))
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
 
-        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 100:
+        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 50:
             self.shield = 0
             self.NOW_HP -= 30
             if self.NOW_HP == 0:
@@ -211,7 +211,7 @@ Money()
 Player1 = Opr(0, 500, pers)
 draw_map()
 moobs = []
-for i in range(3):
+for i in range(5):
     moobs.append(Mob(1700, 700, pers))
 
 # Mob(1700, 700)
@@ -240,10 +240,8 @@ while True:
             Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
     # Отрисовка спрайтов
-    print(Player1.image)
 
-    player_group.update()
-
+    player_group.update(return_skin())
     projectales.update()
     mod_group.update()
 
@@ -255,6 +253,7 @@ while True:
     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
     with open("MONEY.txt", encoding="utf-8", mode="w") as mn:
         mn.write(str(COUNT_MONEY))
+
     # Смена кадра
     pygame.display.flip()
     clock.tick(FPS)
