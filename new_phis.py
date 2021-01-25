@@ -15,8 +15,8 @@ class Game_Object(pygame.sprite.Sprite):
         self.jumping = False
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
-        self.START_HP = 180
-        self.NOW_HP = 180
+        self.START_HP = 1800
+        self.NOW_HP = 1800
         self.START_MANA = 200
         self.NOW_MANA = 200
         self.god_mode = False
