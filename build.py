@@ -40,6 +40,13 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pushButton_5.clicked.connect(self.run_loc)
         self.pushButton_6.clicked.connect(self.run_loc)
 
+        self.label.setStyleSheet('background-color: green')
+        self.label_2.setStyleSheet('background-color: purple')
+        self.label_3.setStyleSheet('background-color: purple')
+        self.label_4.setStyleSheet('background-color: green')
+        self.label_5.setStyleSheet('background-color: purple')
+        self.label_6.setStyleSheet('background-color: purple')
+
     # метод сччитывает какую локацию выбрал игрок и ставит её
     def run_loc(self):
         global background, location_code, location, background_music
@@ -49,17 +56,25 @@ class MyShop(QMainWindow, Ui_MainWindow):
             location_code = JUNGLE
             background_music.load(r'data\Music\background_1.mp3')
             background_music.play(-1)
-            self.label_4.setSt
+            self.label_4.setStyleSheet('background-color: green')
+            self.label_5.setStyleSheet('background-color: purple')
+            self.label_6.setStyleSheet('background-color: purple')
         if self.sender().objectName()[-1] == '5':
             location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
             location_code = WINTER
             background_music.load(r'data\Music\background_2.mp3')
             background_music.play(-1)
+            self.label_4.setStyleSheet('background-color: purple')
+            self.label_5.setStyleSheet('background-color: green')
+            self.label_6.setStyleSheet('background-color: purple')
         if self.sender().objectName()[-1] == '6':
             location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
             location_code = DESERT
             background_music.load(r'data\Music\background_3.mp3')
             background_music.play(-1)
+            self.label_4.setStyleSheet('background-color: purple')
+            self.label_5.setStyleSheet('background-color: purple')
+            self.label_6.setStyleSheet('background-color: green')
         background = load_image(location[0])
         draw_map()
 
@@ -72,6 +87,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                     pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
                     player_shoot_mus]
+            self.label.setStyleSheet('background-color: green')
+            self.label_2.setStyleSheet('background-color: purple')
+            self.label_3.setStyleSheet('background-color: purple')
 
         if self.sender().objectName()[-1] == '2':
             pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
@@ -79,12 +97,18 @@ class MyShop(QMainWindow, Ui_MainWindow):
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                     pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
                     player_shoot_mus]
+            self.label.setStyleSheet('background-color: purple')
+            self.label_2.setStyleSheet('background-color: green')
+            self.label_3.setStyleSheet('background-color: purple')
         if self.sender().objectName()[-1] == '3':
             pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
             player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
             pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                     pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
                     player_shoot_mus]
+            self.label.setStyleSheet('background-color: purple')
+            self.label_2.setStyleSheet('background-color: purple')
+            self.label_3.setStyleSheet('background-color: green')
 
 
 # класс настроек выполняет функцию окошка Настройки
