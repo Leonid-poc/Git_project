@@ -126,7 +126,7 @@ class Opr(Game_Object):
     def return_hp(self):
         return self.NOW_HP, self.START_HP
 
-    def update(self, image):
+    def update(self):
         # # проверка что скин не меняли через QT
         # if self.spisok_animation != image:
         #     x, y = self.rect.x, self.rect.y
@@ -240,12 +240,12 @@ while True:
             Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
     # Отрисовка спрайтов
-    print(Player1.return_now_skin())
+    print(Player1.image)
 
-    player_group.update(Player1.return_now_skin())
+    player_group.update()
 
     projectales.update()
-    # mod_group.update()
+    mod_group.update()
 
     all_sprites.draw(screen)
     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
