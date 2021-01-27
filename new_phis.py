@@ -175,6 +175,14 @@ class Opr(Game_Object):
                             self.NOW_MANA -= 20
                             self.spisok_animation[4].play()
                             Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+        if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
+            with open('shop_pers_loc.json') as FAQ:
+                data = json.load(FAQ)
+                for i in data:
+                    data[i]['hero'] = False
+                    data[i]['location'] = False
+            with open('shop_pers_loc.json', 'w') as FAQ:
+                json.dump(data, FAQ)
 
         # прыжок
         if self.jumping:
