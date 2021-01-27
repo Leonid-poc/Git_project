@@ -138,7 +138,7 @@ class Opr(Game_Object):
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
 
-        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 50:
+        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
             self.shield = 0
             self.NOW_HP -= 30
             if self.NOW_HP == 0:
@@ -175,6 +175,14 @@ class Opr(Game_Object):
                             self.NOW_MANA -= 20
                             self.spisok_animation[4].play()
                             Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+        if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
+            with open('shop_pers_loc.json') as FAQ:
+                data = json.load(FAQ)
+                for i in data:
+                    data[i]['hero'] = False
+                    data[i]['location'] = False
+            with open('shop_pers_loc.json', 'w') as FAQ:
+                json.dump(data, FAQ)
 
         # прыжок
         if self.jumping:
