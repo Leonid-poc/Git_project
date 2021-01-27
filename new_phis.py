@@ -138,7 +138,7 @@ class Opr(Game_Object):
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
 
-        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 50:
+        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
             self.shield = 0
             self.NOW_HP -= 30
             if self.NOW_HP == 0:

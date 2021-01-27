@@ -66,7 +66,7 @@ color: rgb(255, 0, 242);</string>
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -125,14 +125,14 @@ color: rgb(255, 0, 242);</string>
 color: rgb(247, 0, 255);</string>
           </property>
           <property name="text">
-           <string>скин_1</string>
+           <string>Кикимора</string>
           </property>
          </widget>
         </item>
         <item row="1" column="2">
          <widget class="QPushButton" name="pushButton_3">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="font">
            <font>
@@ -147,14 +147,14 @@ color: rgb(247, 0, 255);</string>
 color: rgb(247, 0, 255);</string>
           </property>
           <property name="text">
-           <string>скин_3</string>
+           <string>Купить за 5К</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_2">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="font">
            <font>
@@ -169,7 +169,7 @@ color: rgb(247, 0, 255);</string>
 color: rgb(247, 0, 255);</string>
           </property>
           <property name="text">
-           <string>скин_2</string>
+           <string>Купить за 1К</string>
           </property>
          </widget>
         </item>
@@ -221,7 +221,7 @@ color: rgb(247, 0, 255);</string>
         <item row="1" column="2">
          <widget class="QPushButton" name="pushButton_6">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="font">
            <font>
@@ -236,7 +236,7 @@ color: rgb(247, 0, 255);</string>
 color: rgb(247, 0, 255);</string>
           </property>
           <property name="text">
-           <string>Пустыня</string>
+           <string>Купить за 10К</string>
           </property>
           <property name="checkable">
            <bool>false</bool>
@@ -280,7 +280,7 @@ color: rgb(247, 0, 255);</string>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_5">
           <property name="enabled">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="font">
            <font>
@@ -295,7 +295,7 @@ color: rgb(247, 0, 255);</string>
 color: rgb(247, 0, 255);</string>
           </property>
           <property name="text">
-           <string>Зима</string>
+           <string>Купить за 2К</string>
           </property>
           <property name="checkable">
            <bool>false</bool>
