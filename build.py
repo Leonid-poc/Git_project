@@ -30,20 +30,14 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_4.clicked.connect(self.run_loc)
         money = return_money()
-        with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
-            if self.pushButton_2.text()[0] != 'C' and money >= 1000:
-                self.pushButton_2.setEnabled(True)
-                print(money)
-                txt.write(str(money - 1000))
-            if self.pushButton_3.text()[0] != 'М' and money >= 5000:
-                self.pushButton_3.setEnabled(True)
-                txt.write(str(money - 5000))
-            if self.pushButton_5.text()[0] != 'З' and money >= 2000:
-                self.pushButton_5.setEnabled(True)
-                txt.write(str(money - 2000))
-            if self.pushButton_6.text()[0] != 'П' and money >= 10000:
-                self.pushButton_6.setEnabled(True)
-                txt.write(str(money - 10000))
+        if money >= 1000:
+            self.pushButton_2.setEnabled(True)
+        if money >= 5000:
+            self.pushButton_3.setEnabled(True)
+        if money >= 2000:
+            self.pushButton_5.setEnabled(True)
+        if money >= 10000:
+            self.pushButton_6.setEnabled(True)
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
         self.pushButton_5.clicked.connect(self.run_loc)
@@ -52,30 +46,38 @@ class MyShop(QMainWindow, Ui_MainWindow):
     def run_loc(self):
         global background, location_code, location, background_music
         map_group.empty()
-        if self.sender().objectName()[-1] == '4':
-            location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
-            location_code = JUNGLE
-            background_music.load(r'data\Music\background_1.mp3')
-            background_music.play(-1)
-            self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
-        if self.sender().objectName()[-1] == '5':
-            self.pushButton_5.setText('Зима')
-            self.update_json('winter', 'location', True)
-            self.update_info()
-            location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
-            location_code = WINTER
-            background_music.load(r'data\Music\background_2.mp3')
-            background_music.play(-1)
-            self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
-        if self.sender().objectName()[-1] == '6':
-            self.pushButton_6.setText('Пустыня')
-            self.update_json('desert', 'location', True)
-            self.update_info()
-            location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
-            location_code = DESERT
-            background_music.load(r'data\Music\background_3.mp3')
-            background_music.play(-1)
-            self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
+        money = return_money()
+        with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
+            if self.sender().objectName()[-1] == '4':
+                location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
+                location_code = JUNGLE
+                background_music.load(r'data\Music\background_1.mp3')
+                background_music.play(-1)
+                self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
+
+            if self.sender().objectName()[-1] == '5':
+                if self.pushButton_5.text()[0] == 'К':
+                    txt.write(str(money - 2000))
+                    self.pushButton_5.setText('Зима')
+                self.update_json('winter', 'location', True)
+                self.update_info()
+                location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
+                location_code = WINTER
+                background_music.load(r'data\Music\background_2.mp3')
+                background_music.play(-1)
+                self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
+
+            if self.sender().objectName()[-1] == '6':
+                if self.pushButton_5.text()[0] == 'К':
+                    txt.write(str(money - 10000))
+                    self.pushButton_6.setText('Пустыня')
+                self.update_json('desert', 'location', True)
+                self.update_info()
+                location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
+                location_code = DESERT
+                background_music.load(r'data\Music\background_3.mp3')
+                background_music.play(-1)
+                self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
         background = load_image(location[0])
         draw_map()
 
@@ -100,6 +102,14 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.label.setPixmap(self.pixmap_pers[0])
         self.label_2.setPixmap(self.pixmap_pers[1])
         self.label_3.setPixmap(self.pixmap_pers[2])
+        if data["winter"]["location"]:
+            self.pushButton_5.setText('Зима')
+        if data["desert"]["location"]:
+            self.pushButton_6.setText('Пустыня')
+        if data["winter"]["hero"]:
+            self.pushButton_2.setText('Саб Зиро')
+        if data["desert"]["hero"]:
+            self.pushButton_3.setText('Мандалорец')
 
     def update_json(self, loc, obj, boool):
         with open('shop_pers_loc.json') as FAQ:
@@ -111,35 +121,41 @@ class MyShop(QMainWindow, Ui_MainWindow):
     # метод который ставит персонажа который выбрал пользователь
     def run_pers(self):
         global pers, player_shoot_mus
-        if self.sender().objectName()[-1] == 'n':
-            pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
-            player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
-            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
-                    pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
-                    player_shoot_mus]
-            self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
+        money = return_money()
+        with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
+            if self.sender().objectName()[-1] == 'n':
+                pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+                player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
+                pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
+                        pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
+                        player_shoot_mus]
+                self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
 
-        if self.sender().objectName()[-1] == '2':
-            self.pushButton_2.setText('Саб Зиро')
-            self.update_json('winter', 'hero', True)
-            self.update_info()
-            pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
-            player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
-            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
-                    pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
-                    player_shoot_mus]
-            self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
+            if self.sender().objectName()[-1] == '2':
+                if self.pushButton_2.text()[0] == 'К':
+                    txt.write(str(money - 1000))
+                    self.pushButton_2.setText('Саб Зиро')
+                self.update_json('winter', 'hero', True)
+                self.update_info()
+                pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
+                player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
+                pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
+                        pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
+                        player_shoot_mus]
+                self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
 
-        if self.sender().objectName()[-1] == '3':
-            self.pushButton_3.setText('Мандалорец')
-            self.update_json('desert', 'hero', True)
-            self.update_info()
-            pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
-            player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
-            pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
-                    pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
-                    player_shoot_mus]
-            self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
+            if self.sender().objectName()[-1] == '3':
+                if self.pushButton_3.text()[0] == 'К':
+                    txt.write(str(money - 5000))
+                    self.pushButton_3.setText('Мандалорец')
+                self.update_json('desert', 'hero', True)
+                self.update_info()
+                pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
+                player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
+                pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
+                        pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
+                        player_shoot_mus]
+                self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
 
     def pereresovka(self, spisok, spisok_yes_no):
         exec(f'self.label{spisok[0]}.setStyleSheet(self.color_{spisok_yes_no[0]})')
