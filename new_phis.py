@@ -1,10 +1,12 @@
+from timeit import time
+
 from build import *
 from Proj import *
 
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
-
+KILL_COUNT = 0
 class Game_Object(pygame.sprite.Sprite):
     def __init__(self, x, y, pers, group):
         super(Game_Object, self).__init__(all_sprites, group)
@@ -47,23 +49,39 @@ class Mob(Game_Object):
         self.NOW_MANA = 200
         self.jumping = False
         self.count_jump = 20
-        # зачем?
-        self.vx = rg.choice(range(5, 10))
+        self.vx = 6
 
     def update(self):
-        global COUNT_MONEY
+        global COUNT_MONEY, KILL_COUNT
+        # Падение
+        vfod = False
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
-        if self.rect.x + self.rect.w >= screen.get_width() or self.rect.x <= 0:
-            self.vx = -self.vx
-            self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
+        # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
+        #     self.vx = -self.vx
+        #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
+        #     self.rect.x += self.vx
+        if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
+            #self.vx = -self.vx
+            print(self.vx)
+            self.rect.x -= self.vx
+            print(self.rect.x)
+        if self.rect.x <= 100:
+            #self.vx = abs(self.vx)
+            print("2")
+            self.rect.x += abs(self.vx)
+        print(self.rect.x)
+
+
         if pygame.sprite.spritecollide(self, projectales, True):
-            self.NOW_HP -= 60
+            self.NOW_HP -= 90
             if self.NOW_HP == 0:
                 COUNT_MONEY += rg.choice(range(3, 6))
                 self.kill()
+                mobs.pop()
+                KILL_COUNT += 1
                 Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
-                Mob(1700, 700, pers)
+                #Mob(1700, 700, pers)
 
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
             self.jumping = rg.choice(range(100))
@@ -89,7 +107,8 @@ class Mob(Game_Object):
                     self.proof_font_fall_out_map()
         else:
             self.jumping = False
-        self.rect.x += self.vx
+        self.rect.x -= self.vx
+
         if self.NOW_HP > 0:
             Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y, 100, 10).obn()
 
@@ -211,16 +230,39 @@ class Opr(Game_Object):
         self.shield += 1
 
 
+mobs = []
+count_mobs = 3
+wave_number = 0
+def wave_print():
+    if len(mobs) == 0:
+        pygame.draw.rect(screen, (72, 61, 139), (700, 400, 500, 150))
+        pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
 
-# вызываю определённые классы которые автоматически отрисовывваются
+        screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
+
 shop = Shop()
 Settings()
 Money()
 Player1 = Opr(0, 500, pers)
 draw_map()
-moobs = []
-for i in range(5):
-    moobs.append(Mob(1700, 700, pers))
+
+
+def wave():
+    global count_mobs, wave_number, mobs
+    if len(mobs) == 0:
+        Player1.NOW_MANA = Player1.START_MANA
+        # pygame.draw.rect(screen, (72, 61, 139), (700, 400, 500, 150))
+        # pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
+        # screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
+        for i in range(count_mobs):
+            mobs.append(Mob(2700 + (250 * i), 750, pers))
+
+        count_mobs += 2
+        wave_number += 1
+
+
+# вызываю определённые классы которые автоматически отрисовывваются
+
 
 # Mob(1700, 700)
 while True:
@@ -243,7 +285,8 @@ while True:
 
     # Восполнение маны
     Player1.up_mana()
-    for mob in moobs:
+    # Отрисовка хп мобов
+    for mob in mobs:
         if mob.NOW_HP != 0:
             Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
@@ -254,13 +297,33 @@ while True:
     mod_group.update()
 
     all_sprites.draw(screen)
+    # Отрисовка всех доп.статов на экране
     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
     money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
     rect_money = money_fon.get_rect()
     screen.blit(ren_fon, (0, 0))
     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
+    # Сохранение кол-ва монеток и максимального кол-ва килов
     with open("MONEY.txt", encoding="utf-8", mode="w") as mn:
         mn.write(str(COUNT_MONEY))
+    with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
+        BEST_KILL_COUNT = int(mn1.read())
+        if BEST_KILL_COUNT < KILL_COUNT:
+            BEST_KILL_COUNT = KILL_COUNT
+    with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
+        mn1.write(str(BEST_KILL_COUNT))
+
+    #pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
+    kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
+    screen.blit(kills, (0, 70))
+    best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
+    w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
+    screen.blit(w, (410, 0))
+    screen.blit(best_kills, (0, 110))
+    # Вызов волн мобов
+
+
+    wave()
 
     # Смена кадра
     pygame.display.flip()

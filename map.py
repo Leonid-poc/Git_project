@@ -5,7 +5,7 @@ JUNGLE = [
     '...................',
     '...................',
     '...................',
-    'qqqqqqqqqqqqqqqqqqq'
+    'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'
 ]
 WINTER = [
     '..................',
@@ -14,7 +14,7 @@ WINTER = [
     '..................',
     '..................',
     '..................',
-    'qqqqqqqqqqqqqqqqqq'
+    'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'
 ]
 DESERT = [
     '..................',
@@ -23,5 +23,5 @@ DESERT = [
     '..................',
     '..................',
     '..................',
-    'qqqqqqqqqqqqqqqqqq'
+    'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'
 ]

@@ -124,11 +124,13 @@ class MyShop(QMainWindow, Ui_MainWindow):
         money = return_money()
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == 'n':
+                ## начина от сюда
                 pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                         pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
                         player_shoot_mus]
+                ##я до сюда можно сделать отдельный метод для всего этого
                 self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
 
             if self.sender().objectName()[-1] == '2':
