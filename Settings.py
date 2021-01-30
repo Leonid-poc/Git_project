@@ -47,7 +47,7 @@ location_code = JUNGLE
 pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
         pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
-        player_shoot_mus]
+        player_shoot_mus, {'damage': 90, 'health': 180, 'mana': 200}]
 # список координат всех квадратов земли на холсте
 map_coords_spisok = []
 

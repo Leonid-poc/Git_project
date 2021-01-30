@@ -19,6 +19,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle('Магазин')
         self.update_info()
+        self.money = return_money()
         self.color_no = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
                     'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));'
         self.color_yes = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
@@ -29,14 +30,13 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_4.clicked.connect(self.run_loc)
-        money = return_money()
-        if money >= 1000:
+        if self.money >= 1000:
             self.pushButton_2.setEnabled(True)
-        if money >= 5000:
+        if self.money >= 5000:
             self.pushButton_3.setEnabled(True)
-        if money >= 2000:
+        if self.money >= 2000:
             self.pushButton_5.setEnabled(True)
-        if money >= 10000:
+        if self.money >= 10000:
             self.pushButton_6.setEnabled(True)
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
@@ -44,9 +44,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(self.run_loc)
     # метод сччитывает какую локацию выбрал игрок и ставит её
     def run_loc(self):
-        global background, location_code, location, background_music
+        global background, location_code, location, background_music, COUNT_MONEY
         map_group.empty()
-        money = return_money()
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == '4':
                 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
@@ -57,8 +56,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
             if self.sender().objectName()[-1] == '5':
                 if self.pushButton_5.text()[0] == 'К':
-                    txt.write(str(money - 2000))
-                    self.pushButton_5.setText('Зима')
+                    COUNT_MONEY -= 2000
+                    txt.write(str(self.money - 2000))
                 self.update_json('winter', 'location', True)
                 self.update_info()
                 location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
@@ -69,8 +68,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
             if self.sender().objectName()[-1] == '6':
                 if self.pushButton_5.text()[0] == 'К':
-                    txt.write(str(money - 10000))
-                    self.pushButton_6.setText('Пустыня')
+                    COUNT_MONEY -= 10000
+                    txt.write(str(self.money - 10000))
                 self.update_json('desert', 'location', True)
                 self.update_info()
                 location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
@@ -120,8 +119,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
     # метод который ставит персонажа который выбрал пользователь
     def run_pers(self):
-        global pers, player_shoot_mus
-        money = return_money()
+        global pers, player_shoot_mus, COUNT_MONEY
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == 'n':
                 ## начина от сюда
@@ -129,34 +127,34 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                         pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
-                        player_shoot_mus]
+                        player_shoot_mus, {'damage': 90, 'health': 180, 'mana': 200}]
                 ##я до сюда можно сделать отдельный метод для всего этого
                 self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
 
             if self.sender().objectName()[-1] == '2':
                 if self.pushButton_2.text()[0] == 'К':
-                    txt.write(str(money - 1000))
-                    self.pushButton_2.setText('Саб Зиро')
+                    txt.write(str(self.money - 1000))
+                    COUNT_MONEY -= 1000
                 self.update_json('winter', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                         pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
-                        player_shoot_mus]
+                        player_shoot_mus, {'damage': 500, 'health': 65, 'mana': 350}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
 
             if self.sender().objectName()[-1] == '3':
                 if self.pushButton_3.text()[0] == 'К':
-                    txt.write(str(money - 5000))
-                    self.pushButton_3.setText('Мандалорец')
+                    COUNT_MONEY -= 5000
+                    txt.write(str(self.money - 5000))
                 self.update_json('desert', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                         pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
-                        player_shoot_mus]
+                        player_shoot_mus, {'damage': 50, 'health': 500, 'mana': 180}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
 
     def pereresovka(self, spisok, spisok_yes_no):

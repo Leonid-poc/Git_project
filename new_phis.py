@@ -10,17 +10,12 @@ KILL_COUNT = 0
 class Game_Object(pygame.sprite.Sprite):
     def __init__(self, x, y, pers, group):
         super(Game_Object, self).__init__(all_sprites, group)
-        self.spisok_animation = pers
-        self.image = self.spisok_animation[0]
+        self.image = pers[0]
         self.mask = pygame.mask.from_surface(self.image)
         self.count_jump = 20
         self.jumping = False
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
-        self.START_HP = 1800
-        self.NOW_HP = 1800
-        self.START_MANA = 200
-        self.NOW_MANA = 200
         self.god_mode = False
         self.time_to_restart_mana = 0
         self.time_to_shoot = 0
@@ -54,7 +49,6 @@ class Mob(Game_Object):
     def update(self):
         global COUNT_MONEY, KILL_COUNT
         # Падение
-        vfod = False
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
         # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
@@ -62,20 +56,16 @@ class Mob(Game_Object):
         #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
         #     self.rect.x += self.vx
         if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
-            #self.vx = -self.vx
-            print(self.vx)
+        #     self.vx = -self.vx
             self.rect.x -= self.vx
-            print(self.rect.x)
         if self.rect.x <= 100:
             #self.vx = abs(self.vx)
-            print("2")
-            self.rect.x += abs(self.vx)
-        print(self.rect.x)
+            self.vx = 0
 
 
         if pygame.sprite.spritecollide(self, projectales, True):
-            self.NOW_HP -= 90
-            if self.NOW_HP == 0:
+            self.NOW_HP -= Player1.return_damage()
+            if self.NOW_HP <= 0:
                 COUNT_MONEY += rg.choice(range(3, 6))
                 self.kill()
                 mobs.pop()
@@ -115,7 +105,8 @@ class Mob(Game_Object):
 class Opr(Game_Object):
     def __init__(self, x, y, pers):
         super(Opr, self).__init__(x, y, pers, player_group)
-        pass
+        self.spisok_animation = pers
+        self.update_static_pers()
 
     # метод выдачи режима бога
     def give_mod(self):
@@ -123,6 +114,12 @@ class Opr(Game_Object):
             self.god_mode = True
         else:
             self.god_mode = False
+
+    def update_static_pers(self):
+        self.START_HP = self.spisok_animation[5]['health']
+        self.NOW_HP = self.spisok_animation[5]['health']
+        self.START_MANA = self.spisok_animation[5]['mana']
+        self.NOW_MANA = self.spisok_animation[5]['mana']
 
     # метод возвращения настоящей картинки
     def return_now_skin(self):
@@ -145,6 +142,9 @@ class Opr(Game_Object):
     def return_hp(self):
         return self.NOW_HP, self.START_HP
 
+    def return_damage(self):
+        return self.spisok_animation[5]['damage']
+
     def update(self, image):
         # # проверка что скин не меняли через QT
         if self.spisok_animation != image:
@@ -153,6 +153,7 @@ class Opr(Game_Object):
             self.image = self.spisok_animation[0]
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
+            self.update_static_pers()
         # если персонаж в воздухе он плавно спускается как будто на парашуте)))
         if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
             self.rect.y += 5
