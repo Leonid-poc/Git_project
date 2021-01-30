@@ -7,6 +7,8 @@ from Proj import *
 pygame.init()
 clock = pygame.time.Clock()
 KILL_COUNT = 0
+
+
 class Game_Object(pygame.sprite.Sprite):
     def __init__(self, x, y, pers, group):
         super(Game_Object, self).__init__(all_sprites, group)
@@ -25,57 +27,11 @@ class Game_Object(pygame.sprite.Sprite):
 
     # проверка не провалился ли слегка игрок под карту
     def proof_font_fall_out_map(self):
-        while self.rect.bottom > map_coords_spisok[0]:
+        while self.rect.bottom > map_coords_spisok[0] + 1:
             self.rect.y -= 1
 
-class Mob(Game_Object):
-    def __init__(self, x, y, pers):
-        super(Mob, self).__init__(x, y, pers, mod_group)
-        self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
-                                 pygame.transform.flip(
-                                     pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
-                                     False)]
-        self.image = self.spisok_animation[0]
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x, y
-        self.START_HP = 180
-        self.NOW_HP = 180
-        self.START_MANA = 200
-        self.NOW_MANA = 200
-        self.jumping = False
-        self.count_jump = 20
-        self.vx = 6
-
-    def update(self):
-        global COUNT_MONEY, KILL_COUNT
-        # Падение
-        if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
-            self.rect.y += 5
-        # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
-        #     self.vx = -self.vx
-        #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
-        #     self.rect.x += self.vx
-        if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
-        #     self.vx = -self.vx
-            self.rect.x -= self.vx
-        if self.rect.x <= 100:
-            #self.vx = abs(self.vx)
-            self.vx = 0
-
-
-        if pygame.sprite.spritecollide(self, projectales, True):
-            self.NOW_HP -= Player1.return_damage()
-            if self.NOW_HP <= 0:
-                COUNT_MONEY += rg.choice(range(3, 6))
-                self.kill()
-                mobs.pop()
-                KILL_COUNT += 1
-                Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
-                #Mob(1700, 700, pers)
-
-        if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-            self.jumping = rg.choice(range(100))
-        if self.jumping == 10:
+    def jump(self, proof):
+        if proof:
             if self.count_jump >= -20:
                 if self.count_jump < 0:
                     if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
@@ -97,14 +53,67 @@ class Mob(Game_Object):
                     self.proof_font_fall_out_map()
         else:
             self.jumping = False
+
+
+class Mob(Game_Object):
+    def __init__(self, x, y, pers):
+        super(Mob, self).__init__(x, y, pers, mod_group)
+        self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
+                                 pygame.transform.flip(
+                                     pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
+                                     False)]
+        self.image = self.spisok_animation[1]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.START_HP = 180
+        self.NOW_HP = 180
+        self.START_MANA = 200
+        self.NOW_MANA = 200
+        self.jumping = False
+        self.count_jump = 20
+        self.vx = 6
+
+    def update(self):
+        global COUNT_MONEY, KILL_COUNT
+        # Падение
+        if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
+            self.rect.y += 5
+            self.proof_font_fall_out_map()
+        # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
+        #     self.vx = -self.vx
+        #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
+        #     self.rect.x += self.vx
+        if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
+            #     self.vx = -self.vx
+            self.rect.x -= self.vx
+        if self.rect.x <= 100:
+            # self.vx = abs(self.vx)
+            self.vx = 0
+
+        if pygame.sprite.spritecollide(self, projectales, True):
+            self.NOW_HP -= Player1.return_damage()
+            if self.NOW_HP <= 0:
+                COUNT_MONEY += rg.choice(range(3, 6))
+                self.kill()
+                mobs.pop()
+                KILL_COUNT += 1
+                Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
+                # Mob(1700, 700, pers)
+
+        if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
+            self.jumping = rg.choice(range(100))
+        self.jump(self.jumping == 10)
+
         self.rect.x -= self.vx
 
         if self.NOW_HP > 0:
             Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y, 100, 10).obn()
 
-class Opr(Game_Object):
+
+# класс игрока который отвечает за любые события и изменения персонажа
+class Player(Game_Object):
     def __init__(self, x, y, pers):
-        super(Opr, self).__init__(x, y, pers, player_group)
+        super(Player, self).__init__(x, y, pers, player_group)
         self.spisok_animation = pers
         self.update_static_pers()
 
@@ -195,6 +204,7 @@ class Opr(Game_Object):
                             self.NOW_MANA -= 20
                             self.spisok_animation[4].play()
                             Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+
         if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
             with open('shop_pers_loc.json') as FAQ:
                 data = json.load(FAQ)
@@ -205,26 +215,7 @@ class Opr(Game_Object):
                 json.dump(data, FAQ)
 
         # прыжок
-        if self.jumping:
-            if self.count_jump >= -20:
-                if self.count_jump < 0:
-                    if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-                        self.rect.y += (self.count_jump ** 2) / 10
-                    else:
-                        self.jumping = False
-                        self.count_jump = 20
-                        self.proof_font_fall_out_map()
-                else:
-                    self.rect.y -= (self.count_jump ** 2) / 10
-                self.count_jump -= 1
-            else:
-                if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-                    self.rect.y += (self.count_jump ** 2) / 10
-                    self.count_jump -= 1
-                else:
-                    self.jumping = False
-                    self.count_jump = 20
-                    self.proof_font_fall_out_map()
+        self.jump(self.jumping)
 
         # задержка выстрелов из орудия\посоха
         self.count_shoot += 1
@@ -234,18 +225,14 @@ class Opr(Game_Object):
 mobs = []
 count_mobs = 3
 wave_number = 0
+
+
 def wave_print():
     if len(mobs) == 0:
         pygame.draw.rect(screen, (72, 61, 139), (700, 400, 500, 150))
         pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
 
         screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
-
-shop = Shop()
-Settings()
-Money()
-Player1 = Opr(0, 500, pers)
-draw_map()
 
 
 def wave():
@@ -264,6 +251,11 @@ def wave():
 
 # вызываю определённые классы которые автоматически отрисовывваются
 
+shop = Shop()
+Settings()
+Money()
+Player1 = Player(0, 500, pers)
+draw_map()
 
 # Mob(1700, 700)
 while True:
@@ -314,7 +306,7 @@ while True:
     with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
         mn1.write(str(BEST_KILL_COUNT))
 
-    #pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
+    # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
     kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
     screen.blit(kills, (0, 70))
     best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
@@ -322,7 +314,6 @@ while True:
     screen.blit(w, (410, 0))
     screen.blit(best_kills, (0, 110))
     # Вызов волн мобов
-
 
     wave()
 
