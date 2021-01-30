@@ -297,8 +297,6 @@ while True:
     screen.blit(ren_fon, (0, 0))
     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
     # Сохранение кол-ва монеток и максимального кол-ва килов
-    with open("MONEY.txt", encoding="utf-8", mode="w") as mn:
-        mn.write(str(COUNT_MONEY))
     with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
         BEST_KILL_COUNT = int(mn1.read())
         if BEST_KILL_COUNT < KILL_COUNT:

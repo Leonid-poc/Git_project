@@ -57,7 +57,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
             if self.sender().objectName()[-1] == '5':
                 if self.pushButton_5.text()[0] == 'К':
                     COUNT_MONEY -= 2000
-                    txt.write(str(self.money - 2000))
+                    self.money -= 2000
+                    txt.write(str(self.money))
                 self.update_json('winter', 'location', True)
                 self.update_info()
                 location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
@@ -69,7 +70,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
             if self.sender().objectName()[-1] == '6':
                 if self.pushButton_5.text()[0] == 'К':
                     COUNT_MONEY -= 10000
-                    txt.write(str(self.money - 10000))
+                    self.money -= 10000
+                    txt.write(str(self.money))
                 self.update_json('desert', 'location', True)
                 self.update_info()
                 location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
@@ -133,8 +135,11 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
             if self.sender().objectName()[-1] == '2':
                 if self.pushButton_2.text()[0] == 'К':
-                    txt.write(str(self.money - 1000))
+                    print(self.money, COUNT_MONEY)
+                    self.money -= 1000
+                    txt.write(str(self.money))
                     COUNT_MONEY -= 1000
+                    print(self.money, COUNT_MONEY)
                 self.update_json('winter', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
@@ -147,7 +152,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
             if self.sender().objectName()[-1] == '3':
                 if self.pushButton_3.text()[0] == 'К':
                     COUNT_MONEY -= 5000
-                    txt.write(str(self.money - 5000))
+                    self.money -= 5000
+                    txt.write(str(self.money))
                 self.update_json('desert', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
