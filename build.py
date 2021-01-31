@@ -120,9 +120,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
         if data["desert"]["location"]:
             self.pushButton_6.setText('Пустыня')
         if data["winter"]["hero"]:
-            self.pushButton_2.setText('Саб Зиро')
+            self.pushButton_2.setText('The white Stripes')
         if data["desert"]["hero"]:
-            self.pushButton_3.setText('Мандалорец')
+            self.pushButton_3.setText('Guns N Roses')
 
     def update_json(self, loc, obj, boool):
         with open('shop_pers_loc.json') as FAQ:
