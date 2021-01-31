@@ -93,12 +93,13 @@ class Mob(Game_Object):
         if pygame.sprite.spritecollide(self, projectales, True):
             self.NOW_HP -= Player1.return_damage()
             if self.NOW_HP <= 0:
-                COUNT_MONEY += rg.choice(range(3, 6))
+                with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
+                    COUNT_MONEY = return_money(rg.choice(range(3, 6)))
+                    txt.write(str(COUNT_MONEY))
                 self.kill()
                 mobs.pop()
                 KILL_COUNT += 1
                 Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
-                # Mob(1700, 700, pers)
 
         if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
             self.jumping = rg.choice(range(100))

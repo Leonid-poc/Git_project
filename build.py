@@ -19,33 +19,45 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle('Магазин')
         self.update_info()
-        self.money = return_money()
         self.color_no = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
-                    'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));'
+                        'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));'
         self.color_yes = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
-                    'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(0, 64, 255, 255));'
+                         'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(0, 64, 255, 255));'
 
         self.color_yes1 = 'color: rgb(255, 255, 255)'
         self.color_no1 = 'color: rgb:(0, 64, 255)'
 
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_4.clicked.connect(self.run_loc)
-        if self.money >= 1000:
-            self.pushButton_2.setEnabled(True)
-        if self.money >= 5000:
-            self.pushButton_3.setEnabled(True)
-        if self.money >= 2000:
-            self.pushButton_5.setEnabled(True)
-        if self.money >= 10000:
-            self.pushButton_6.setEnabled(True)
+        self.proof_price()
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
         self.pushButton_5.clicked.connect(self.run_loc)
         self.pushButton_6.clicked.connect(self.run_loc)
-    # метод сччитывает какую локацию выбрал игрок и ставит её
+
+    def proof_price(self):
+        if COUNT_MONEY >= 1000:
+            self.pushButton_2.setEnabled(True)
+        else:
+            self.pushButton_2.setEnabled(False)
+        if COUNT_MONEY >= 2000:
+            self.pushButton_5.setEnabled(True)
+        else:
+            self.pushButton_5.setEnabled(False)
+        if COUNT_MONEY >= 5000:
+            self.pushButton_3.setEnabled(True)
+        else:
+            self.pushButton_3.setEnabled(False)
+        if COUNT_MONEY >= 10000:
+            self.pushButton_6.setEnabled(True)
+        else:
+            self.pushButton_6.setEnabled(False)
+        # метод сччитывает какую локацию выбрал игрок и ставит её
+
     def run_loc(self):
         global background, location_code, location, background_music, COUNT_MONEY
         map_group.empty()
+        self.proof_price()
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == '4':
                 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
@@ -53,12 +65,10 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 background_music.load(r'data\Music\background_1.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
-
-            if self.sender().objectName()[-1] == '5':
+            if self.sender().objectName()[-1] == '5' and self.pushButton_5.isEnabled():
                 if self.pushButton_5.text()[0] == 'К':
                     COUNT_MONEY -= 2000
-                    self.money -= 2000
-                    txt.write(str(self.money))
+                    txt.write(str(COUNT_MONEY))
                 self.update_json('winter', 'location', True)
                 self.update_info()
                 location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
@@ -67,11 +77,10 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
 
-            if self.sender().objectName()[-1] == '6':
+            if self.sender().objectName()[-1] == '6' and self.pushButton_6.isEnabled():
                 if self.pushButton_5.text()[0] == 'К':
                     COUNT_MONEY -= 10000
-                    self.money -= 10000
-                    txt.write(str(self.money))
+                    txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'location', True)
                 self.update_info()
                 location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
@@ -79,6 +88,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 background_music.load(r'data\Music\background_3.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
+        self.test_proof_money()
         background = load_image(location[0])
         draw_map()
 
@@ -119,6 +129,15 @@ class MyShop(QMainWindow, Ui_MainWindow):
             data[loc][obj] = boool
             json.dump(data, FAQ)
 
+    def test_proof_money(self):
+        proof = False
+        with open('MONEY.txt', mode='r', encoding='utf-8') as txt:
+            if txt.read() == '':
+                proof = True
+        with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
+            if proof:
+                txt.write(str(COUNT_MONEY))
+
     # метод который ставит персонажа который выбрал пользователь
     def run_pers(self):
         global pers, player_shoot_mus, COUNT_MONEY
@@ -133,13 +152,10 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 ##я до сюда можно сделать отдельный метод для всего этого
                 self.pereresovka(['', '_2', '_3'], ['yes', 'no', 'no'])
 
-            if self.sender().objectName()[-1] == '2':
+            if self.sender().objectName()[-1] == '2' and self.pushButton_2.isEnabled():
                 if self.pushButton_2.text()[0] == 'К':
-                    print(self.money, COUNT_MONEY)
-                    self.money -= 1000
-                    txt.write(str(self.money))
                     COUNT_MONEY -= 1000
-                    print(self.money, COUNT_MONEY)
+                    txt.write(str(COUNT_MONEY))
                 self.update_json('winter', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
@@ -149,11 +165,10 @@ class MyShop(QMainWindow, Ui_MainWindow):
                         player_shoot_mus, {'damage': 500, 'health': 65, 'mana': 350}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
 
-            if self.sender().objectName()[-1] == '3':
+            if self.sender().objectName()[-1] == '3' and self.pushButton_3.isEnabled():
                 if self.pushButton_3.text()[0] == 'К':
                     COUNT_MONEY -= 5000
-                    self.money -= 5000
-                    txt.write(str(self.money))
+                    txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'hero', True)
                 self.update_info()
                 pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
@@ -162,6 +177,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                         pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
                         player_shoot_mus, {'damage': 50, 'health': 500, 'mana': 180}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
+        self.test_proof_money()
 
     def pereresovka(self, spisok, spisok_yes_no):
         exec(f'self.label{spisok[0]}.setStyleSheet(self.color_{spisok_yes_no[0]})')
@@ -310,12 +326,15 @@ class Settings(pygame.sprite.Sprite):
 def return_background():
     return background
 
+
 def return_skin():
     return pers
 
-def return_money():
-    with open('MONEY.txt', encoding='utf-8', mode='r') as txt:
-        return int(txt.read())
+
+def return_money(n):
+    global COUNT_MONEY
+    COUNT_MONEY += n
+    return COUNT_MONEY
 
 
 # класс который зависит от метода draw_map
