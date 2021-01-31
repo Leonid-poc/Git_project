@@ -69,9 +69,8 @@ class Indicator:
         self.FOOT, self.ROS = f, r
 
     def obn(self):
-        if max(0, self.hp_procent) != 0:
-            pygame.draw.rect(screen, (self.COLOR_PAN), (self.x, self.y, int(self.FOOT * self.hp_procent), self.ROS))
-            pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.FOOT, self.ROS), 5)
+        pygame.draw.rect(screen, (self.COLOR_PAN), (self.x, self.y, int(self.FOOT * self.hp_procent), self.ROS))
+        pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.FOOT, self.ROS), 5)
 
     def show(self):
         self.obn()

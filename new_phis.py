@@ -29,6 +29,7 @@ class Game_Object(pygame.sprite.Sprite):
         self.NOW_HP = 0
         self.START_MANA = 0
         self.NOW_MANA = 0
+        self.STEP = 20
 
 
     # проверка не провалился ли слегка игрок под карту
@@ -107,7 +108,7 @@ class Mob(Game_Object):
                 self.NOW_HP -= Player1.return_damage()
                 if self.NOW_HP <= 0:
                     with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
-                        COUNT_MONEY = return_money(rg.choice(range(3, 6)))
+                        COUNT_MONEY = return_money(rg.choice(return_background()[1]))
                         txt.write(str(COUNT_MONEY))
                     self.killing = True
                     mobs.pop()
@@ -180,6 +181,7 @@ class Player(Game_Object):
                 self.characteristics_of_character = image
                 self.image = self.characteristics_of_character[0]
                 self.rect = self.image.get_rect()
+                self.right_pers, self.left_pers = True, False
                 self.rect.x, self.rect.y = x, y
                 self.update_static_pers()
             # если персонаж в воздухе он плавно спускается как будто на парашуте)))
@@ -240,7 +242,7 @@ class Player(Game_Object):
             self.count_shoot += 1
             self.shield += 1
         else:
-            if self.rect.h >= 10:
+            if self.rect.h >= 16:
                 x, y = self.rect.x, self.rect.y
                 self.image = pygame.transform.scale(self.image, (self.rect.w, self.rect.h - 2))
                 self.rect = self.image.get_rect()
@@ -270,6 +272,18 @@ class Portal(Game_Object):
         self.NOW_HP = 700
         self.START_MANA = 0
         self.NOW_MANA = 0
+        self.count_step = 0
+
+
+    def update(self, q=None):
+        self.count_step %= self.STEP * 4
+        self.image = self.characteristics_of_character[self.count_step // self.STEP]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = 10, 680
+        self.count_step += 1
+
+
+
 
 
 
@@ -277,8 +291,10 @@ mobs = []
 count_mobs = 3
 wave_number = 0
 
-port = pygame.transform.scale(load_image(r'Other\portal.png'), (130, 254))
-port = [port, {'damage': 0, 'health': 700, 'mana': 0}]
+port = []
+for i in range(4):
+    port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
+port.append({'damage': 0, 'health': 700, 'mana': 0})
 portal = Portal(10, 680, port)
 
 def wave():
@@ -305,7 +321,7 @@ draw_map()
 
 # Mob(1700, 700)
 while True:
-    screen.blit(return_background(), (0, 0))
+    screen.blit(return_background()[0], (0, 0))
     KEYS = pygame.key.get_pressed()
     for i in pygame.event.get():
         if i.type == pygame.MOUSEBUTTONDOWN:

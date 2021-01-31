@@ -38,9 +38,11 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
     player_shoot_mus.set_volume(int(txt[1]) / 100)
 
 # загружаю стартовую локацию при запуске игры
-location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
+location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range(3, 6)]
+
+mob_animation = [r'Jungle\jungle_mob.png', []]
 # загружаю задний фон по дефолту
-background = load_image(location[0])
+background = [load_image(location[0]), location[3]]
 # задаю карту из списка по дефолту
 location_code = JUNGLE
 # задаю скин игрока по дефолту

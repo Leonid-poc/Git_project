@@ -62,7 +62,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.proof_price()
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == '4':
-                location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png']
+                location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range(3, 6)]
                 location_code = JUNGLE
                 background_music.load(r'data\Music\background_1.mp3')
                 background_music.play(-1)
@@ -73,7 +73,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                     txt.write(str(COUNT_MONEY))
                 self.update_json('winter', 'location', True)
                 self.update_info()
-                location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png']
+                location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png', range(10, 16)]
                 location_code = WINTER
                 background_music.load(r'data\Music\background_2.mp3')
                 background_music.play(-1)
@@ -85,13 +85,13 @@ class MyShop(QMainWindow, Ui_MainWindow):
                     txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'location', True)
                 self.update_info()
-                location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png']
+                location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png', range(20, 31)]
                 location_code = DESERT
                 background_music.load(r'data\Music\background_3.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
         self.test_proof_money()
-        background = load_image(location[0])
+        background = [load_image(location[0]), location[3]]
         draw_map()
 
     def update_info(self):
