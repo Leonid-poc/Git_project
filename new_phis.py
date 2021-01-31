@@ -25,6 +25,11 @@ class Game_Object(pygame.sprite.Sprite):
         self.count_shoot = 0
         self.shield = 100
         self.right_pers, self.left_pers = True, False
+        self.START_HP = 0
+        self.NOW_HP = 0
+        self.START_MANA = 0
+        self.NOW_MANA = 0
+
 
     # проверка не провалился ли слегка игрок под карту
     def proof_font_fall_out_map(self):
@@ -55,15 +60,21 @@ class Game_Object(pygame.sprite.Sprite):
         else:
             self.jumping = False
 
+    def return_mana(self):
+        return self.NOW_MANA, self.START_MANA
+
+    def return_hp(self):
+        return self.NOW_HP, self.START_HP
+
 
 class Mob(Game_Object):
     def __init__(self, x, y, pers):
         super(Mob, self).__init__(x, y, pers, mod_group)
-        self.spisok_animation = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
-                                 pygame.transform.flip(
+        self.characteristics_of_character = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
+                                             pygame.transform.flip(
                                      pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
                                      False)]
-        self.image = self.spisok_animation[1]
+        self.image = self.characteristics_of_character[1]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.START_HP = 180
@@ -125,7 +136,7 @@ class Mob(Game_Object):
 class Player(Game_Object):
     def __init__(self, x, y, pers):
         super(Player, self).__init__(x, y, pers, player_group)
-        self.spisok_animation = pers
+        self.characteristics_of_character = pers
         self.update_static_pers()
 
     # метод выдачи режима бога
@@ -136,10 +147,10 @@ class Player(Game_Object):
             self.god_mode = False
 
     def update_static_pers(self):
-        self.START_HP = self.spisok_animation[5]['health']
-        self.NOW_HP = self.spisok_animation[5]['health']
-        self.START_MANA = self.spisok_animation[5]['mana']
-        self.NOW_MANA = self.spisok_animation[5]['mana']
+        self.START_HP = self.characteristics_of_character[5]['health']
+        self.NOW_HP = self.characteristics_of_character[5]['health']
+        self.START_MANA = self.characteristics_of_character[5]['mana']
+        self.NOW_MANA = self.characteristics_of_character[5]['mana']
 
     # метод возвращения настоящей картинки
     def return_now_skin(self):
@@ -156,22 +167,18 @@ class Player(Game_Object):
         else:
             self.NOW_MANA = 0
 
-    def return_mana(self):
-        return self.NOW_MANA, self.START_MANA
 
-    def return_hp(self):
-        return self.NOW_HP, self.START_HP
 
     def return_damage(self):
-        return self.spisok_animation[5]['damage']
+        return self.characteristics_of_character[5]['damage']
 
     def update(self, image):
         if not self.killing:
             # # проверка что скин не меняли через QT
-            if self.spisok_animation != image:
+            if self.characteristics_of_character != image:
                 x, y = self.rect.x, self.rect.y
-                self.spisok_animation = image
-                self.image = self.spisok_animation[0]
+                self.characteristics_of_character = image
+                self.image = self.characteristics_of_character[0]
                 self.rect = self.image.get_rect()
                 self.rect.x, self.rect.y = x, y
                 self.update_static_pers()
@@ -192,20 +199,20 @@ class Player(Game_Object):
             # когда персонаж идёт направо выполняется смена опаределённой картинки
             if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
                 self.right_pers, self.left_pers = True, False
-                self.image = self.spisok_animation[0]
+                self.image = self.characteristics_of_character[0]
                 self.rect.x += 5
 
             # когда персонаж идёт налево выполняется смена опаределённой картинки
             if KEYS[pygame.K_a] and self.rect.x >= 0:
                 self.right_pers, self.left_pers = False, True
-                self.image = self.spisok_animation[1]
+                self.image = self.characteristics_of_character[1]
                 self.rect.x -= 5
 
             # выстрел
             if KEYS[pygame.K_q]:
                 left_or_right_x = False if self.left_pers else True
                 if self.god_mode:
-                    Projectale(self, self.rect, True, left_or_right_x, self.spisok_animation)
+                    Projectale(self, self.rect, True, left_or_right_x, self.characteristics_of_character)
                 else:
                     if self.count_shoot >= 20:
                         self.count_shoot = 0
@@ -214,8 +221,8 @@ class Player(Game_Object):
                             self.time_to_shoot += 300
                             if self.NOW_MANA >= 20:
                                 self.NOW_MANA -= 20
-                                self.spisok_animation[4].play()
-                                Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+                                self.characteristics_of_character[4].play()
+                                Projectale(self, self.rect, False, left_or_right_x, self.characteristics_of_character)
 
             if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
                 with open('shop_pers_loc.json') as FAQ:
@@ -242,18 +249,37 @@ class Player(Game_Object):
                 self.kill()
 
 
+class Portal(Game_Object):
+    def __init__(self, x, y, pers):
+        super(Portal, self).__init__(x, y, pers, player_group)
+        self.characteristics_of_character = pers
+        self.image = pers[0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.count_jump = 20
+        self.jumping = False
+        self.killing = False
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.god_mode = False
+        self.time_to_restart_mana = 0
+        self.time_to_shoot = 0
+        self.count_shoot = 0
+        self.shield = 15
+        self.right_pers, self.left_pers = True, False
+        self.START_HP = 700
+        self.NOW_HP = 700
+        self.START_MANA = 0
+        self.NOW_MANA = 0
+
+
+
 mobs = []
 count_mobs = 3
 wave_number = 0
 
-
-def wave_print():
-    if len(mobs) == 0:
-        pygame.draw.rect(screen, (72, 61, 139), (700, 400, 500, 150))
-        pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
-
-        screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
-
+port = pygame.transform.scale(load_image(r'Other\portal.png'), (130, 254))
+port = [port, {'damage': 0, 'health': 700, 'mana': 0}]
+portal = Portal(10, 680, port)
 
 def wave():
     global count_mobs, wave_number, mobs
@@ -295,7 +321,7 @@ while True:
     # Отрисовка кол-ва хп и маны
     Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
     Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
-
+    Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).show()
     # Восполнение маны
     Player1.up_mana()
     # Отрисовка хп мобов
