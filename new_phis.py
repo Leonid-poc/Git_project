@@ -16,6 +16,7 @@ class Game_Object(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.count_jump = 20
         self.jumping = False
+        self.killing = False
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.god_mode = False
@@ -156,71 +157,80 @@ class Player(Game_Object):
         return self.spisok_animation[5]['damage']
 
     def update(self, image):
-        # # проверка что скин не меняли через QT
-        if self.spisok_animation != image:
-            x, y = self.rect.x, self.rect.y
-            self.spisok_animation = image
-            self.image = self.spisok_animation[0]
-            self.rect = self.image.get_rect()
-            self.rect.x, self.rect.y = x, y
-            self.update_static_pers()
-        # если персонаж в воздухе он плавно спускается как будто на парашуте)))
-        if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
-            self.rect.y += 5
+        if not self.killing:
+            # # проверка что скин не меняли через QT
+            if self.spisok_animation != image:
+                x, y = self.rect.x, self.rect.y
+                self.spisok_animation = image
+                self.image = self.spisok_animation[0]
+                self.rect = self.image.get_rect()
+                self.rect.x, self.rect.y = x, y
+                self.update_static_pers()
+            # если персонаж в воздухе он плавно спускается как будто на парашуте)))
+            if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
+                self.rect.y += 5
 
-        if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
-            self.shield = 0
-            self.NOW_HP -= 30
-            if self.NOW_HP == 0:
-                self.kill()
+            if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
+                self.shield = 0
+                self.NOW_HP = max(self.NOW_HP - 30, 0)
+                if self.NOW_HP == 0:
+                    self.killing = True
 
-        # делаем прыжок
-        if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
-            self.jumping = True
+            # делаем прыжок
+            if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
+                self.jumping = True
 
-        # когда персонаж идёт направо выполняется смена опаределённой картинки
-        if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
-            self.right_pers, self.left_pers = True, False
-            self.image = self.spisok_animation[0]
-            self.rect.x += 5
+            # когда персонаж идёт направо выполняется смена опаределённой картинки
+            if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
+                self.right_pers, self.left_pers = True, False
+                self.image = self.spisok_animation[0]
+                self.rect.x += 5
 
-        # когда персонаж идёт налево выполняется смена опаределённой картинки
-        if KEYS[pygame.K_a] and self.rect.x >= 0:
-            self.right_pers, self.left_pers = False, True
-            self.image = self.spisok_animation[1]
-            self.rect.x -= 5
+            # когда персонаж идёт налево выполняется смена опаределённой картинки
+            if KEYS[pygame.K_a] and self.rect.x >= 0:
+                self.right_pers, self.left_pers = False, True
+                self.image = self.spisok_animation[1]
+                self.rect.x -= 5
 
-        # выстрел
-        if KEYS[pygame.K_q]:
-            left_or_right_x = False if self.left_pers else True
-            if self.god_mode:
-                Projectale(self, self.rect, True, left_or_right_x, self.spisok_animation)
+            # выстрел
+            if KEYS[pygame.K_q]:
+                left_or_right_x = False if self.left_pers else True
+                if self.god_mode:
+                    Projectale(self, self.rect, True, left_or_right_x, self.spisok_animation)
+                else:
+                    if self.count_shoot >= 20:
+                        self.count_shoot = 0
+                        left_or_right_x = False if self.left_pers else True
+                        if self.time_to_shoot <= 0:
+                            self.time_to_shoot += 300
+                            if self.NOW_MANA >= 20:
+                                self.NOW_MANA -= 20
+                                self.spisok_animation[4].play()
+                                Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
+
+            if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
+                with open('shop_pers_loc.json') as FAQ:
+                    data = json.load(FAQ)
+                    for i in data:
+                        data[i]['hero'] = False
+                        data[i]['location'] = False
+                with open('shop_pers_loc.json', 'w') as FAQ:
+                    json.dump(data, FAQ)
+
+            # прыжок
+            self.jump(self.jumping)
+
+            # задержка выстрелов из орудия\посоха
+            self.count_shoot += 1
+            self.shield += 1
+        else:
+            if self.rect.h >= 10:
+                x, y = self.rect.x, self.rect.y
+                self.image = pygame.transform.scale(self.image, (self.rect.w, self.rect.h - 2))
+                self.rect = self.image.get_rect()
+                self.rect.x, self.rect.y = x, y + 2
             else:
-                if self.count_shoot >= 20:
-                    self.count_shoot = 0
-                    left_or_right_x = False if self.left_pers else True
-                    if self.time_to_shoot <= 0:
-                        self.time_to_shoot += 300
-                        if self.NOW_MANA >= 20:
-                            self.NOW_MANA -= 20
-                            self.spisok_animation[4].play()
-                            Projectale(self, self.rect, False, left_or_right_x, self.spisok_animation)
-
-        if KEYS[pygame.K_F12] + KEYS[pygame.K_F9]:
-            with open('shop_pers_loc.json') as FAQ:
-                data = json.load(FAQ)
-                for i in data:
-                    data[i]['hero'] = False
-                    data[i]['location'] = False
-            with open('shop_pers_loc.json', 'w') as FAQ:
-                json.dump(data, FAQ)
-
-        # прыжок
-        self.jump(self.jumping)
-
-        # задержка выстрелов из орудия\посоха
-        self.count_shoot += 1
-        self.shield += 1
+                self.kill()
 
 
 mobs = []

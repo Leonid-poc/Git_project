@@ -36,19 +36,21 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(self.run_loc)
 
     def proof_price(self):
-        if COUNT_MONEY >= 1000:
+        with open('shop_pers_loc.json') as FAQ:
+            data = json.load(FAQ)
+        if COUNT_MONEY >= 1000 or data["winter"]["hero"]:
             self.pushButton_2.setEnabled(True)
         else:
             self.pushButton_2.setEnabled(False)
-        if COUNT_MONEY >= 2000:
+        if COUNT_MONEY >= 2000 or data["winter"]["location"]:
             self.pushButton_5.setEnabled(True)
         else:
             self.pushButton_5.setEnabled(False)
-        if COUNT_MONEY >= 5000:
+        if COUNT_MONEY >= 5000 or data["desert"]["hero"]:
             self.pushButton_3.setEnabled(True)
         else:
             self.pushButton_3.setEnabled(False)
-        if COUNT_MONEY >= 10000:
+        if COUNT_MONEY >= 10000 or data["desert"]["location"]:
             self.pushButton_6.setEnabled(True)
         else:
             self.pushButton_6.setEnabled(False)
