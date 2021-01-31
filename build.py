@@ -5,7 +5,7 @@ from UI_shop import Ui_MainWindow
 from UI_settings import Ui_MainWindow_1
 from map import *
 from Settings import *
-from Load_image import load_image
+from Load_image import load_image, load_image_t
 
 # инициализируем пайгем и звук из пайгейма
 pygame.init()
@@ -57,13 +57,16 @@ class MyShop(QMainWindow, Ui_MainWindow):
         # метод сччитывает какую локацию выбрал игрок и ставит её
 
     def run_loc(self):
-        global background, location_code, location, background_music, COUNT_MONEY
+        global background, location_code, location, background_music, COUNT_MONEY, mob_animation
         map_group.empty()
         self.proof_price()
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == '4':
                 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range(3, 6)]
                 location_code = JUNGLE
+                mob_animation = [load_image_t(r'Jungle\jungle_mob.png'),
+                                 [load_image_t(r'Jungle\jungle_mob1.png'), load_image_t(r'Jungle\jungle_mob2.png'),
+                                  load_image_t(r'Jungle\jungle_mob3.png')]]
                 background_music.load(r'data\Music\background_1.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
@@ -75,6 +78,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 self.update_info()
                 location = [r'Winter\Winter.png', r'Winter\floor.png', r'Winter\wall.png', range(10, 16)]
                 location_code = WINTER
+                mob_animation = [load_image_t(r'Winter\winter_mob.png'),
+                                 [load_image_t(r'Winter\winter_mob1.png'), load_image_t(r'Winter\winter_mob2.png'),
+                                  load_image_t(r'Winter\winter_mob3.png')]]
                 background_music.load(r'data\Music\background_2.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
@@ -87,6 +93,9 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 self.update_info()
                 location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png', range(20, 31)]
                 location_code = DESERT
+                mob_animation = [load_image_t(r'Desert\desert_mob.png'),
+                                 [load_image_t(r'Desert\desert_mob1.png'), load_image_t(r'Desert\desert_mob2.png'),
+                                  load_image_t(r'Desert\desert_mob3.png')]]
                 background_music.load(r'data\Music\background_3.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
@@ -337,6 +346,9 @@ def return_money(n):
     global COUNT_MONEY
     COUNT_MONEY += n
     return COUNT_MONEY
+
+def return_mob():
+    return mob_animation
 
 
 # класс который зависит от метода draw_map

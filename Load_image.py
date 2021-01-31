@@ -19,3 +19,5 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+def load_image_t(name, colorkey=None):
+    return pygame.transform.scale(pygame.transform.flip(load_image(name, colorkey), True, False), (120, 180))

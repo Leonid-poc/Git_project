@@ -30,11 +30,13 @@ class Game_Object(pygame.sprite.Sprite):
         self.START_MANA = 0
         self.NOW_MANA = 0
         self.STEP = 20
+        self.count_step = 0
+
 
 
     # проверка не провалился ли слегка игрок под карту
     def proof_font_fall_out_map(self):
-        while self.rect.bottom > map_coords_spisok[0] + 1:
+        while self.rect.bottom > map_coords_spisok[0] + 3:
             self.rect.y -= 1
 
     def jump(self, proof):
@@ -71,11 +73,8 @@ class Game_Object(pygame.sprite.Sprite):
 class Mob(Game_Object):
     def __init__(self, x, y, pers):
         super(Mob, self).__init__(x, y, pers, mod_group)
-        self.characteristics_of_character = [pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)),
-                                             pygame.transform.flip(
-                                     pygame.transform.scale(load_image(r'Jungle\jungle_mob.png'), (120, 180)), True,
-                                     False)]
-        self.image = self.characteristics_of_character[1]
+        self.characteristics_of_character = pers
+        self.image = self.characteristics_of_character[0]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.START_HP = 180
@@ -85,6 +84,14 @@ class Mob(Game_Object):
         self.jumping = False
         self.count_jump = 20
         self.vx = 6
+
+    def animation(self):
+        self.count_step %= self.STEP * 3
+        x, y = self.rect.x, self.rect.y
+        self.image = self.characteristics_of_character[1][self.count_step // self.STEP]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.count_step += 1
 
     def update(self):
         if not self.killing:
@@ -97,11 +104,12 @@ class Mob(Game_Object):
             #     self.vx = -self.vx
             #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
             #     self.rect.x += self.vx
-            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
+            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 130:
                 #     self.vx = -self.vx
                 self.rect.x -= self.vx
-            if self.rect.x <= 100:
+            if self.rect.x <= 130:
                 # self.vx = abs(self.vx)
+                self.animation()
                 self.vx = 0
 
             if pygame.sprite.spritecollide(self, projectales, True):
@@ -272,7 +280,6 @@ class Portal(Game_Object):
         self.NOW_HP = 700
         self.START_MANA = 0
         self.NOW_MANA = 0
-        self.count_step = 0
 
 
     def update(self, q=None):
@@ -305,7 +312,7 @@ def wave():
         # pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
         # screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
         for i in range(count_mobs):
-            mobs.append(Mob(2700 + (250 * i), 750, pers))
+            mobs.append(Mob(2700 + (250 * i), 750, return_mob()))
 
         count_mobs += 2
         wave_number += 1

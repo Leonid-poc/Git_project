@@ -3,7 +3,7 @@ from map import *
 import pygame
 from pprint import pprint
 import random as rg
-from Load_image import load_image
+from Load_image import load_image, load_image_t
 pygame.init()
 pygame.mixer.init()
 # ссоздаю группу спрайтов котораая нам понадобится в будущем
@@ -40,7 +40,9 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
 # загружаю стартовую локацию при запуске игры
 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range(3, 6)]
 
-mob_animation = [r'Jungle\jungle_mob.png', []]
+mob_animation = [load_image_t(r'Jungle\jungle_mob.png'),
+                 [load_image_t(r'Jungle\jungle_mob1.png'), load_image_t(r'Jungle\jungle_mob2.png'),
+                  load_image_t(r'Jungle\jungle_mob3.png')]]
 # загружаю задний фон по дефолту
 background = [load_image(location[0]), location[3]]
 # задаю карту из списка по дефолту
