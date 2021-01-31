@@ -75,41 +75,50 @@ class Mob(Game_Object):
         self.vx = 6
 
     def update(self):
-        global COUNT_MONEY, KILL_COUNT
-        # Падение
-        if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
-            self.rect.y += 5
-            self.proof_font_fall_out_map()
-        # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
-        #     self.vx = -self.vx
-        #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
-        #     self.rect.x += self.vx
-        if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
+        if not self.killing:
+            global COUNT_MONEY, KILL_COUNT
+            # Падение
+            if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
+                self.rect.y += 5
+                self.proof_font_fall_out_map()
+            # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
             #     self.vx = -self.vx
+            #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
+            #     self.rect.x += self.vx
+            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 100:
+                #     self.vx = -self.vx
+                self.rect.x -= self.vx
+            if self.rect.x <= 100:
+                # self.vx = abs(self.vx)
+                self.vx = 0
+
+            if pygame.sprite.spritecollide(self, projectales, True):
+                self.NOW_HP -= Player1.return_damage()
+                if self.NOW_HP <= 0:
+                    with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
+                        COUNT_MONEY = return_money(rg.choice(range(3, 6)))
+                        txt.write(str(COUNT_MONEY))
+                    self.killing = True
+                    mobs.pop()
+                    KILL_COUNT += 1
+                    Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
+
+            if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
+                self.jumping = rg.choice(range(100))
+            self.jump(self.jumping == 10)
+
             self.rect.x -= self.vx
-        if self.rect.x <= 100:
-            # self.vx = abs(self.vx)
-            self.vx = 0
 
-        if pygame.sprite.spritecollide(self, projectales, True):
-            self.NOW_HP -= Player1.return_damage()
-            if self.NOW_HP <= 0:
-                with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
-                    COUNT_MONEY = return_money(rg.choice(range(3, 6)))
-                    txt.write(str(COUNT_MONEY))
+            if self.NOW_HP > 0:
+                Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y, 100, 10).obn()
+        else:
+            if self.rect.h >= 10:
+                x, y = self.rect.x, self.rect.y
+                self.image = pygame.transform.scale(self.image, (self.rect.w, self.rect.h - 2))
+                self.rect = self.image.get_rect()
+                self.rect.x, self.rect.y = x, y + 2
+            else:
                 self.kill()
-                mobs.pop()
-                KILL_COUNT += 1
-                Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
-
-        if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-            self.jumping = rg.choice(range(100))
-        self.jump(self.jumping == 10)
-
-        self.rect.x -= self.vx
-
-        if self.NOW_HP > 0:
-            Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y, 100, 10).obn()
 
 
 # класс игрока который отвечает за любые события и изменения персонажа
