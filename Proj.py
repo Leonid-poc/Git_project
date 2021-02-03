@@ -21,7 +21,7 @@ class Projectale(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = self.pers_pos_x, self.pers_pos_y
 
     def update(self):
-        if not (pygame.sprite.spritecollide(self, map_group, False) or self.rect.topright[0] >= screen.get_width()):
+        if not (pygame.sprite.spritecollide(self, map_group, False) or self.rect.topright[0] >= screen.get_width() or self.rect.topright[0] < 0):
             if self.mode:
                 self.rect.x += 100 * self.VX
             else:

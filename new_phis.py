@@ -140,7 +140,7 @@ class Mob(Game_Object):
             self.rect.x -= self.vx
 
             if self.NOW_HP > 0:
-                Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y, 100, 10).obn()
+                Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y - 10, 100, 10).obn()
         else:
             if self.rect.h >= 10:
                 x, y = self.rect.x, self.rect.y
@@ -183,8 +183,10 @@ class Player(Game_Object):
                 if self.time_to_restart_mana == 100:
                     self.time_to_restart_mana = 0
                     self.NOW_MANA += 20
+                    # self.NOW_HP += 5
         else:
             self.NOW_MANA = 0
+
 
     def return_damage(self):
         return self.characteristics_of_character[5]['damage']
@@ -206,10 +208,12 @@ class Player(Game_Object):
             #
             if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
                 self.shield = 0
-                self.NOW_HP = max(self.NOW_HP - 30, 0)
-
-                if self.NOW_HP == 0:
-                    self.killing = True
+                if self.god_mode:
+                    pass
+                else:
+                    self.NOW_HP = max(self.NOW_HP - 30, 0)
+                    if self.NOW_HP == 0:
+                        self.killing = True
 
             # делаем прыжок
             if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
@@ -318,6 +322,7 @@ def wave():
         # screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
         for i in range(count_mobs):
             mobs.append(Mob(2700 + (250 * i), 750, return_mob()))
+        print(len(mobs))
 
         count_mobs += 2
         wave_number += 1
@@ -362,6 +367,7 @@ def mainest_main():
         # Отрисовка спрайтов
 
         player_group.update(return_skin())
+
         projectales.update()
         mod_group.update()
 

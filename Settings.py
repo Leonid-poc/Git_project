@@ -44,7 +44,7 @@ location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range
 
 mob_animation = [load_image_t(r'Jungle\jungle_mob.png'),
                  [load_image_t(r'Jungle\jungle_mob1.png'), load_image_t(r'Jungle\jungle_mob2.png'),
-                  load_image_t(r'Jungle\jungle_mob3.png')]]
+                  load_image_t(r'Jungle\jungle_mob3.png')], {'damage': 30, 'health': 180, 'mana': None}]
 # загружаю задний фон по дефолту
 background = [load_image(location[0]), location[3]]
 # задаю карту из списка по дефолту
