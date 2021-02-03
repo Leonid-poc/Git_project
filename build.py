@@ -173,7 +173,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                         pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
-                        player_shoot_mus, {'damage': 500, 'health': 65, 'mana': 350}]
+                        player_shoot_mus, {'damage': 500, 'health': 45, 'mana': 300}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'yes', 'no'])
 
             if self.sender().objectName()[-1] == '3' and self.pushButton_3.isEnabled():
@@ -337,9 +337,9 @@ class Settings(pygame.sprite.Sprite):
 def return_background():
     return background
 
-
-def return_skin():
-    return pers
+#
+# def return_skin():
+#     return pers
 
 
 def return_money(n):

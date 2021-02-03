@@ -93,6 +93,10 @@ class Mob(Game_Object):
         self.rect.x, self.rect.y = x, y
         self.count_step += 1
 
+
+    def give_damage(self, person):
+        person.HOW_HP -= 30
+
     def update(self):
         if not self.killing:
             global COUNT_MONEY, KILL_COUNT
@@ -110,7 +114,17 @@ class Mob(Game_Object):
             if self.rect.x <= 130:
                 # self.vx = abs(self.vx)
                 self.animation()
+
                 self.vx = 0
+            #
+            # if pygame.sprite.spritecollideany(self, mod_group) and Player.shield >= 150:
+            #     print("[pp")
+            #     self.shield = 0
+            #     Player.NOW_HP = max(Player.NOW_HP - 30, 0)
+            #     self.animation()
+            #     if Player.NOW_HP == 0:
+            #         Player.killing = True
+
 
             if pygame.sprite.spritecollide(self, projectales, True):
                 self.NOW_HP -= Player1.return_damage()
@@ -141,7 +155,7 @@ class Mob(Game_Object):
                 self.kill()
 
 
-# класс игрока который отвечает за любые события и изменения персонажа
+# класс игрока, который отвечает за любые события и изменения персонажа
 class Player(Game_Object):
     def __init__(self, x, y, pers):
         super(Player, self).__init__(x, y, pers, player_group)
@@ -195,10 +209,11 @@ class Player(Game_Object):
             # если персонаж в воздухе он плавно спускается как будто на парашуте)))
             if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
                 self.rect.y += 5
-
+            #
             if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
                 self.shield = 0
                 self.NOW_HP = max(self.NOW_HP - 30, 0)
+
                 if self.NOW_HP == 0:
                     self.killing = True
 
@@ -326,64 +341,138 @@ Money()
 Player1 = Player(0, 500, pers)
 draw_map()
 
+
+def return_skin():
+    return pers
+
+
+
+def mainest_main():
+    while True:
+        screen.blit(return_background()[0], (0, 0))
+        KEYS = pygame.key.get_pressed()
+        for i in pygame.event.get():
+            if i.type == pygame.MOUSEBUTTONDOWN:
+                sprites_dop.update(i.pos)
+            if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
+                sys.exit()
+            if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
+                Player1.give_mod()
+
+        # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
+        if not Player1.god_mode:
+            Player1.time_to_shoot -= 10
+        # Отрисовка кол-ва хп и маны
+        Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
+        Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
+        Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
+        # Восполнение маны
+        Player1.up_mana()
+        # Отрисовка хп мобов
+        # for mob in mobs:
+        #     if mob.NOW_HP != 0:
+        #         Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
+
+        # Отрисовка спрайтов
+
+        player_group.update(return_skin())
+        projectales.update()
+        mod_group.update()
+
+        all_sprites.draw(screen)
+        # Отрисовка всех доп.статов на экране
+        ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
+        money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
+        rect_money = money_fon.get_rect()
+        screen.blit(ren_fon, (0, 0))
+        screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
+        # Сохранение кол-ва монеток и максимального кол-ва килов
+        with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
+            BEST_KILL_COUNT = int(mn1.read())
+            if BEST_KILL_COUNT < KILL_COUNT:
+                BEST_KILL_COUNT = KILL_COUNT
+        with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
+            mn1.write(str(BEST_KILL_COUNT))
+
+        # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
+        kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
+        screen.blit(kills, (0, 70))
+        best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
+        w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
+        screen.blit(w, (410, 0))
+        screen.blit(best_kills, (0, 110))
+        # Вызов волн мобов
+
+        wave()
+
+        # Смена кадра
+        pygame.display.flip()
+        clock.tick(FPS)
+
 # Mob(1700, 700)
-while True:
-    screen.blit(return_background()[0], (0, 0))
-    KEYS = pygame.key.get_pressed()
-    for i in pygame.event.get():
-        if i.type == pygame.MOUSEBUTTONDOWN:
-            sprites_dop.update(i.pos)
-        if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
-            sys.exit()
-        if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
-            Player1.give_mod()
+# while True:
+#     screen.blit(return_background()[0], (0, 0))
+#     KEYS = pygame.key.get_pressed()
+#     for i in pygame.event.get():
+#         if i.type == pygame.MOUSEBUTTONDOWN:
+#             sprites_dop.update(i.pos)
+#         if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
+#             sys.exit()
+#         if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
+#             Player1.give_mod()
+#
+#     # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
+#     if not Player1.god_mode:
+#         Player1.time_to_shoot -= 10
+#     # Отрисовка кол-ва хп и маны
+#     Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
+#     Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
+#     Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
+#     # Восполнение маны
+#     Player1.up_mana()
+#     # Отрисовка хп мобов
+#     # for mob in mobs:
+#     #     if mob.NOW_HP != 0:
+#     #         Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
+#
+#     # Отрисовка спрайтов
+#
+#     player_group.update(return_skin())
+#     projectales.update()
+#     mod_group.update()
+#
+#     all_sprites.draw(screen)
+#     # Отрисовка всех доп.статов на экране
+#     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
+#     money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
+#     rect_money = money_fon.get_rect()
+#     screen.blit(ren_fon, (0, 0))
+#     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
+#     # Сохранение кол-ва монеток и максимального кол-ва килов
+#     with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
+#         BEST_KILL_COUNT = int(mn1.read())
+#         if BEST_KILL_COUNT < KILL_COUNT:
+#             BEST_KILL_COUNT = KILL_COUNT
+#     with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
+#         mn1.write(str(BEST_KILL_COUNT))
+#
+#     # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
+#     kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
+#     screen.blit(kills, (0, 70))
+#     best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
+#     w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
+#     screen.blit(w, (410, 0))
+#     screen.blit(best_kills, (0, 110))
+#     # Вызов волн мобов
+#
+#     wave()
+#
+#     # Смена кадра
+#     pygame.display.flip()
+#     clock.tick(FPS)
+#
+#
+#
+mainest_main()
 
-    # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
-    if not Player1.god_mode:
-        Player1.time_to_shoot -= 10
-    # Отрисовка кол-ва хп и маны
-    Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
-    Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
-    Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).show()
-    # Восполнение маны
-    Player1.up_mana()
-    # Отрисовка хп мобов
-    for mob in mobs:
-        if mob.NOW_HP != 0:
-            Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
-    # Отрисовка спрайтов
-
-    player_group.update(return_skin())
-    projectales.update()
-    mod_group.update()
-
-    all_sprites.draw(screen)
-    # Отрисовка всех доп.статов на экране
-    ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
-    money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
-    rect_money = money_fon.get_rect()
-    screen.blit(ren_fon, (0, 0))
-    screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
-    # Сохранение кол-ва монеток и максимального кол-ва килов
-    with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
-        BEST_KILL_COUNT = int(mn1.read())
-        if BEST_KILL_COUNT < KILL_COUNT:
-            BEST_KILL_COUNT = KILL_COUNT
-    with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
-        mn1.write(str(BEST_KILL_COUNT))
-
-    # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
-    kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
-    screen.blit(kills, (0, 70))
-    best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
-    w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
-    screen.blit(w, (410, 0))
-    screen.blit(best_kills, (0, 110))
-    # Вызов волн мобов
-
-    wave()
-
-    # Смена кадра
-    pygame.display.flip()
-    clock.tick(FPS)
