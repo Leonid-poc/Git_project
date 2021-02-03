@@ -1,9 +1,8 @@
-import sys, os, pygame, json
+import sys, json
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPixmap
 from UI_shop import Ui_MainWindow
 from UI_settings import Ui_MainWindow_1
-from map import *
 from Settings import *
 from Load_image import load_image, load_image_t
 
@@ -337,9 +336,9 @@ class Settings(pygame.sprite.Sprite):
 def return_background():
     return background
 
-#
-# def return_skin():
-#     return pers
+
+def return_skin():
+    return pers
 
 
 def return_money(n):

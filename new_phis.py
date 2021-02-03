@@ -32,8 +32,6 @@ class Game_Object(pygame.sprite.Sprite):
         self.STEP = 20
         self.count_step = 0
 
-
-
     # проверка не провалился ли слегка игрок под карту
     def proof_font_fall_out_map(self):
         while self.rect.bottom > map_coords_spisok[0] + 3:
@@ -93,7 +91,6 @@ class Mob(Game_Object):
         self.rect.x, self.rect.y = x, y
         self.count_step += 1
 
-
     def give_damage(self, person):
         person.HOW_HP -= 30
 
@@ -124,7 +121,6 @@ class Mob(Game_Object):
             #     self.animation()
             #     if Player.NOW_HP == 0:
             #         Player.killing = True
-
 
             if pygame.sprite.spritecollide(self, projectales, True):
                 self.NOW_HP -= Player1.return_damage()
@@ -189,8 +185,6 @@ class Player(Game_Object):
                     self.NOW_MANA += 20
         else:
             self.NOW_MANA = 0
-
-
 
     def return_damage(self):
         return self.characteristics_of_character[5]['damage']
@@ -296,17 +290,12 @@ class Portal(Game_Object):
         self.START_MANA = 0
         self.NOW_MANA = 0
 
-
     def update(self, q=None):
         self.count_step %= self.STEP * 4
         self.image = self.characteristics_of_character[self.count_step // self.STEP]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 10, 680
         self.count_step += 1
-
-
-
-
 
 
 mobs = []
@@ -318,6 +307,7 @@ for i in range(4):
     port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
 port.append({'damage': 0, 'health': 700, 'mana': 0})
 portal = Portal(10, 680, port)
+
 
 def wave():
     global count_mobs, wave_number, mobs
@@ -342,12 +332,8 @@ Player1 = Player(0, 500, pers)
 draw_map()
 
 
-def return_skin():
-    return pers
-
-
-
 def mainest_main():
+    global KEYS
     while True:
         screen.blit(return_background()[0], (0, 0))
         KEYS = pygame.key.get_pressed()
@@ -408,6 +394,7 @@ def mainest_main():
         # Смена кадра
         pygame.display.flip()
         clock.tick(FPS)
+
 
 # Mob(1700, 700)
 # while True:
@@ -474,5 +461,3 @@ def mainest_main():
 #
 #
 mainest_main()
-
-

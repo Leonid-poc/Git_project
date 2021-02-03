@@ -28,6 +28,8 @@ background_music = pygame.mixer.music
 background_music.load(r'data\Music\background_1.mp3')
 background_music.play(-1)
 
+KEYS = pygame.key.get_pressed()
+
 
 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
 
