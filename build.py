@@ -65,7 +65,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 location_code = JUNGLE
                 mob_animation = [load_image_t(r'Jungle\jungle_mob.png'),
                                  [load_image_t(r'Jungle\jungle_mob1.png'), load_image_t(r'Jungle\jungle_mob2.png'),
-                                  load_image_t(r'Jungle\jungle_mob3.png')]]
+                                  load_image_t(r'Jungle\jungle_mob3.png')],
+                                 {'damage': 30, 'health': 180, 'mana': None}]
                 background_music.load(r'data\Music\background_1.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['yes', 'no', 'no'])
@@ -79,7 +80,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 location_code = WINTER
                 mob_animation = [load_image_t(r'Winter\winter_mob.png'),
                                  [load_image_t(r'Winter\winter_mob1.png'), load_image_t(r'Winter\winter_mob2.png'),
-                                  load_image_t(r'Winter\winter_mob3.png')]]
+                                  load_image_t(r'Winter\winter_mob3.png')],
+                                 {'damage': 100, 'health': 150, 'mana': None}]
                 background_music.load(r'data\Music\background_2.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
@@ -94,7 +96,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 location_code = DESERT
                 mob_animation = [load_image_t(r'Desert\desert_mob.png'),
                                  [load_image_t(r'Desert\desert_mob1.png'), load_image_t(r'Desert\desert_mob2.png'),
-                                  load_image_t(r'Desert\desert_mob3.png')]]
+                                  load_image_t(r'Desert\desert_mob3.png')], {'damage': 65, 'health': 225, 'mana': None}]
                 background_music.load(r'data\Music\background_3.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
@@ -185,7 +187,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                         pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
-                        player_shoot_mus, {'damage': 50, 'health': 500, 'mana': 180}]
+                        player_shoot_mus, {'damage': 65, 'health': 500, 'mana': 225}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
         self.test_proof_money()
 

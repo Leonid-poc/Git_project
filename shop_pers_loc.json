@@ -1,1 +1,1 @@
-{"winter": {"location": true, "hero": false}, "desert": {"location": true, "hero": false}}
+{"winter": {"location": true, "hero": true}, "desert": {"location": true, "hero": true}}

@@ -24,6 +24,7 @@ class Game_Object(pygame.sprite.Sprite):
         self.time_to_shoot = 0
         self.count_shoot = 0
         self.shield = 100
+        self.shield_count = 0
         self.right_pers, self.left_pers = True, False
         self.START_HP = 0
         self.NOW_HP = 0
@@ -75,8 +76,8 @@ class Mob(Game_Object):
         self.image = self.characteristics_of_character[0]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
-        self.START_HP = 180
-        self.NOW_HP = 180
+        self.START_HP = pers[2]['health']
+        self.NOW_HP = pers[2]['health']
         self.START_MANA = 200
         self.NOW_MANA = 200
         self.jumping = False
@@ -84,15 +85,20 @@ class Mob(Game_Object):
         self.vx = 6
 
     def animation(self):
-        self.count_step %= self.STEP * 3
         x, y = self.rect.x, self.rect.y
-        self.image = self.characteristics_of_character[1][self.count_step // self.STEP]
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x, y
-        self.count_step += 1
+        if pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
+            self.count_step %= self.STEP * 3
+            self.image = self.characteristics_of_character[1][self.count_step // self.STEP]
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = x, y
+            self.count_step += 1
+            for i in pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
+                i.damage(self.characteristics_of_character[2]['damage'])
 
-    def give_damage(self, person):
-        person.HOW_HP -= 30
+        else:
+            self.image = self.characteristics_of_character[0]
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = x, y
 
     def update(self):
         if not self.killing:
@@ -105,14 +111,15 @@ class Mob(Game_Object):
             #     self.vx = -self.vx
             #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
             #     self.rect.x += self.vx
-            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 130:
+            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 110:
                 #     self.vx = -self.vx
                 self.rect.x -= self.vx
-            if self.rect.x <= 130:
+            if self.rect.x <= 110:
                 # self.vx = abs(self.vx)
-                self.animation()
 
                 self.vx = 0
+            self.animation()
+
             #
             # if pygame.sprite.spritecollideany(self, mod_group) and Player.shield >= 150:
             #     print("[pp")
@@ -187,12 +194,17 @@ class Player(Game_Object):
         else:
             self.NOW_MANA = 0
 
+    def damage(self, dam):
+        if self.shield_count >= self.shield:
+            self.NOW_HP -= dam
+            self.shield_count = 0
 
     def return_damage(self):
         return self.characteristics_of_character[5]['damage']
 
     def update(self, image):
         if not self.killing:
+            self.shield_count += 1
             # # проверка что скин не меняли через QT
             if self.characteristics_of_character != image:
                 x, y = self.rect.x, self.rect.y
@@ -205,15 +217,10 @@ class Player(Game_Object):
             # если персонаж в воздухе он плавно спускается как будто на парашуте)))
             if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
                 self.rect.y += 5
-            #
-            if pygame.sprite.spritecollideany(self, mod_group) and self.shield >= 150:
-                self.shield = 0
-                if self.god_mode:
-                    pass
-                else:
-                    self.NOW_HP = max(self.NOW_HP - 30, 0)
-                    if self.NOW_HP == 0:
-                        self.killing = True
+
+            self.NOW_HP = max(self.NOW_HP, 0)
+            if self.NOW_HP == 0:
+                self.killing = True
 
             # делаем прыжок
             if KEYS[pygame.K_SPACE] and not self.jumping and pygame.sprite.spritecollideany(self, map_group):
@@ -261,7 +268,6 @@ class Player(Game_Object):
 
             # задержка выстрелов из орудия\посоха
             self.count_shoot += 1
-            self.shield += 1
         else:
             if self.rect.h >= 16:
                 x, y = self.rect.x, self.rect.y
@@ -278,23 +284,23 @@ class Portal(Game_Object):
         self.characteristics_of_character = pers
         self.image = pers[0]
         self.mask = pygame.mask.from_surface(self.image)
-        self.count_jump = 20
-        self.jumping = False
         self.killing = False
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.god_mode = False
-        self.time_to_restart_mana = 0
-        self.time_to_shoot = 0
-        self.count_shoot = 0
-        self.shield = 15
-        self.right_pers, self.left_pers = True, False
         self.START_HP = 700
         self.NOW_HP = 700
-        self.START_MANA = 0
-        self.NOW_MANA = 0
+
+    def damage(self, dam):
+        if self.NOW_HP > 0:
+            if self.shield_count >= self.shield:
+                self.NOW_HP -= dam
+                self.shield_count = 0
+        else:
+            self.kill()
 
     def update(self, q=None):
+        self.shield_count += 1
         self.count_step %= self.STEP * 4
         self.image = self.characteristics_of_character[self.count_step // self.STEP]
         self.rect = self.image.get_rect()
@@ -322,7 +328,6 @@ def wave():
         # screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
         for i in range(count_mobs):
             mobs.append(Mob(2700 + (250 * i), 750, return_mob()))
-        print(len(mobs))
 
         count_mobs += 2
         wave_number += 1
