@@ -1,5 +1,3 @@
-from timeit import time
-
 from build import *
 from Proj import *
 
@@ -68,6 +66,9 @@ class Game_Object(pygame.sprite.Sprite):
     def return_hp(self):
         return self.NOW_HP, self.START_HP
 
+    def return_pos(self):
+        return self.rect.x, self.rect.y
+
 
 class Mob(Game_Object):
     def __init__(self, x, y, pers):
@@ -82,6 +83,7 @@ class Mob(Game_Object):
         self.NOW_MANA = 200
         self.jumping = False
         self.count_jump = 20
+        self.agressian = False
         self.vx = 6
 
     def animation(self):
@@ -94,11 +96,24 @@ class Mob(Game_Object):
             self.count_step += 1
             for i in pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
                 i.damage(self.characteristics_of_character[2]['damage'])
-
         else:
             self.image = self.characteristics_of_character[0]
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
+
+    def II(self):
+        if ((self.rect.x >= Player1.return_pos()[0] - 300 and
+                                             self.rect.x <= Player1.return_pos()[0]) or
+                                             (self.rect.x <= Player1.return_pos()[0] + 300 and
+                                              self.rect.x > Player1.return_pos()[0])) and \
+                self not in Player1.return_agress():
+            self.agressian = True
+            Player1.give_agress(self)
+            print(Player1.return_agress())
+            self.vx = abs(self.vx)
+        else:
+            self.agressian = False
+            self.vx = abs(self.vx)
 
     def update(self):
         if not self.killing:
@@ -111,13 +126,15 @@ class Mob(Game_Object):
             #     self.vx = -self.vx
             #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
             #     self.rect.x += self.vx
-            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 110:
+            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 110 and not self.agressian:
                 #     self.vx = -self.vx
                 self.rect.x -= self.vx
-            if self.rect.x <= 110:
+            if self.rect.x <= 110 and not self.agressian:
                 # self.vx = abs(self.vx)
-
                 self.vx = 0
+            print(Player1.return_agress())
+            self.II()
+
             self.animation()
 
             #
@@ -163,6 +180,7 @@ class Player(Game_Object):
     def __init__(self, x, y, pers):
         super(Player, self).__init__(x, y, pers, player_group)
         self.characteristics_of_character = pers
+        self.agress = []
         self.update_static_pers()
 
     # метод выдачи режима бога
@@ -182,6 +200,12 @@ class Player(Game_Object):
     def return_now_skin(self):
         return self.image
 
+    def return_agress(self):
+        return self.agress
+
+    def give_agress(self, q):
+        self.agress.append(q)
+
     # восстановление маны
     def up_mana(self):
         if self.NOW_HP > 0:
@@ -195,7 +219,7 @@ class Player(Game_Object):
             self.NOW_MANA = 0
 
     def damage(self, dam):
-        if self.shield_count >= self.shield:
+        if self.shield_count >= self.shield and not (self.god_mode):
             self.NOW_HP -= dam
             self.shield_count = 0
 

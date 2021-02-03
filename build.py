@@ -92,11 +92,11 @@ class MyShop(QMainWindow, Ui_MainWindow):
                     txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'location', True)
                 self.update_info()
-                location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png', range(20, 31)]
+                location = [r'Desert\desert.png', r'Desert\floor.png', r'Desert\wall.png', range(50, 81)]
                 location_code = DESERT
                 mob_animation = [load_image_t(r'Desert\desert_mob.png'),
                                  [load_image_t(r'Desert\desert_mob1.png'), load_image_t(r'Desert\desert_mob2.png'),
-                                  load_image_t(r'Desert\desert_mob3.png')], {'damage': 65, 'health': 225, 'mana': None}]
+                                  load_image_t(r'Desert\desert_mob3.png')], {'damage': 65, 'health': 285, 'mana': None}]
                 background_music.load(r'data\Music\background_3.mp3')
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
