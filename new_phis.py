@@ -10,20 +10,15 @@ KILL_COUNT = 0
 class Game_Object(pygame.sprite.Sprite):
     def __init__(self, x, y, pers, group):
         super(Game_Object, self).__init__(all_sprites, group)
-        self.image = pers[0]
-        self.mask = pygame.mask.from_surface(self.image)
         self.count_jump = 20
         self.jumping = False
         self.killing = False
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x, y
         self.god_mode = False
         self.time_to_restart_mana = 0
         self.time_to_shoot = 0
         self.count_shoot = 0
         self.shield = 100
         self.shield_count = 0
-        self.right_pers, self.left_pers = True, False
         self.START_HP = 0
         self.NOW_HP = 0
         self.START_MANA = 0
@@ -71,10 +66,12 @@ class Game_Object(pygame.sprite.Sprite):
 
 
 class Mob(Game_Object):
-    def __init__(self, x, y, pers):
-        super(Mob, self).__init__(x, y, pers, mod_group)
+    def __init__(self, x, y, pers, group=mod_group):
+        super(Mob, self).__init__(x, y, pers, group)
         self.characteristics_of_character = pers
-        self.image = self.characteristics_of_character[0]
+        self.right_pers, self.left_pers = False, True
+        self.image = self.characteristics_of_character[0][0]
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.START_HP = pers[2]['health']
@@ -83,37 +80,25 @@ class Mob(Game_Object):
         self.NOW_MANA = 200
         self.jumping = False
         self.count_jump = 20
-        self.agressian = False
-        self.vx = 6
+        self.agressian = True if Player1.return_agressor() < 4 else False
+        if self.agressian:
+            Player1.append_agressor()
+        self.vx = rg.randrange(4, 7)
 
     def animation(self):
         x, y = self.rect.x, self.rect.y
         if pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
             self.count_step %= self.STEP * 3
-            self.image = self.characteristics_of_character[1][self.count_step // self.STEP]
+            self.image = self.characteristics_of_character[1][self.count_step // self.STEP][1 if self.right_pers else 0]
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
             self.count_step += 1
             for i in pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
                 i.damage(self.characteristics_of_character[2]['damage'])
         else:
-            self.image = self.characteristics_of_character[0]
+            self.image = self.characteristics_of_character[0][1 if self.right_pers else 0]
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
-
-    def II(self):
-        if ((self.rect.x >= Player1.return_pos()[0] - 300 and
-                                             self.rect.x <= Player1.return_pos()[0]) or
-                                             (self.rect.x <= Player1.return_pos()[0] + 300 and
-                                              self.rect.x > Player1.return_pos()[0])) and \
-                self not in Player1.return_agress():
-            self.agressian = True
-            Player1.give_agress(self)
-            print(Player1.return_agress())
-            self.vx = abs(self.vx)
-        else:
-            self.agressian = False
-            self.vx = abs(self.vx)
 
     def update(self):
         if not self.killing:
@@ -122,29 +107,18 @@ class Mob(Game_Object):
             if not pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask) and not self.jumping:
                 self.rect.y += 5
                 self.proof_font_fall_out_map()
-            # if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x >= 100:
-            #     self.vx = -self.vx
-            #     self.image = self.spisok_animation[abs(self.spisok_animation.index(self.image) - 1)]
-            #     self.rect.x += self.vx
-            if self.rect.x + self.rect.w >= screen.get_width() and self.rect.x > 110 and not self.agressian:
-                #     self.vx = -self.vx
+            if self.rect.x > 110 and not self.agressian:
                 self.rect.x -= self.vx
-            if self.rect.x <= 110 and not self.agressian:
-                # self.vx = abs(self.vx)
-                self.vx = 0
-            print(Player1.return_agress())
-            self.II()
+            elif self.agressian:
+                raznica = Player1.return_pos()[0] - self.rect.x
+                if raznica == abs(raznica):
+                    self.right_pers, self.left_pers = True, False
+                    self.rect.x += self.vx
+                else:
+                    self.right_pers, self.left_pers = False, True
+                    self.rect.x -= self.vx
 
             self.animation()
-
-            #
-            # if pygame.sprite.spritecollideany(self, mod_group) and Player.shield >= 150:
-            #     print("[pp")
-            #     self.shield = 0
-            #     Player.NOW_HP = max(Player.NOW_HP - 30, 0)
-            #     self.animation()
-            #     if Player.NOW_HP == 0:
-            #         Player.killing = True
 
             if pygame.sprite.spritecollide(self, projectales, True):
                 self.NOW_HP -= Player1.return_damage()
@@ -160,9 +134,6 @@ class Mob(Game_Object):
             if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
                 self.jumping = rg.choice(range(100))
             self.jump(self.jumping == 10)
-
-            self.rect.x -= self.vx
-
             if self.NOW_HP > 0:
                 Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y - 10, 100, 10).obn()
         else:
@@ -172,15 +143,23 @@ class Mob(Game_Object):
                 self.rect = self.image.get_rect()
                 self.rect.x, self.rect.y = x, y + 2
             else:
+                if self.agressian:
+                    Player1.kill_agressor()
                 self.kill()
 
 
 # класс игрока, который отвечает за любые события и изменения персонажа
 class Player(Game_Object):
-    def __init__(self, x, y, pers):
-        super(Player, self).__init__(x, y, pers, player_group)
+    count_agressors = 0
+
+    def __init__(self, x, y, pers, group=player_group):
+        super(Player, self).__init__(x, y, pers, group)
         self.characteristics_of_character = pers
-        self.agress = []
+        self.image = pers[0]
+        self.rect = self.image.get_rect()
+        self.rect.y = 755
+        self.mask = pygame.mask.from_surface(self.image)
+        self.right_pers, self.left_pers = True, False
         self.update_static_pers()
 
     # метод выдачи режима бога
@@ -200,11 +179,14 @@ class Player(Game_Object):
     def return_now_skin(self):
         return self.image
 
-    def return_agress(self):
-        return self.agress
+    def append_agressor(self):
+        self.count_agressors += 1
 
-    def give_agress(self, q):
-        self.agress.append(q)
+    def kill_agressor(self):
+        self.count_agressors -= 1
+
+    def return_agressor(self):
+        return self.count_agressors
 
     # восстановление маны
     def up_mana(self):
@@ -254,13 +236,13 @@ class Player(Game_Object):
             if KEYS[pygame.K_d] and self.rect.x + self.rect.width <= screen.get_width():
                 self.right_pers, self.left_pers = True, False
                 self.image = self.characteristics_of_character[0]
-                self.rect.x += 5
+                self.rect.x += 8
 
             # когда персонаж идёт налево выполняется смена опаределённой картинки
             if KEYS[pygame.K_a] and self.rect.x >= 0:
                 self.right_pers, self.left_pers = False, True
                 self.image = self.characteristics_of_character[1]
-                self.rect.x -= 5
+                self.rect.x -= 8
 
             # выстрел
             if KEYS[pygame.K_q]:
@@ -303,8 +285,8 @@ class Player(Game_Object):
 
 
 class Portal(Game_Object):
-    def __init__(self, x, y, pers):
-        super(Portal, self).__init__(x, y, pers, player_group)
+    def __init__(self, x, y, pers, group=player_group):
+        super(Portal, self).__init__(x, y, pers, group)
         self.characteristics_of_character = pers
         self.image = pers[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -347,6 +329,7 @@ def wave():
     global count_mobs, wave_number, mobs
     if len(mobs) == 0:
         Player1.NOW_MANA = Player1.START_MANA
+        Player1.count_agressors = 0
         # pygame.draw.rect(screen, (72, 61, 139), (700, 400, 500, 150))
         # pygame.draw.rect(screen, (0, 0, 0), (700, 400, 500, 150), 20)
         # screen.blit(FONT.render(f'Wave {wave_number}', True, (255, 204, 0)), (850, 420))
@@ -431,68 +414,5 @@ def mainest_main():
         clock.tick(FPS)
 
 
-# Mob(1700, 700)
-# while True:
-#     screen.blit(return_background()[0], (0, 0))
-#     KEYS = pygame.key.get_pressed()
-#     for i in pygame.event.get():
-#         if i.type == pygame.MOUSEBUTTONDOWN:
-#             sprites_dop.update(i.pos)
-#         if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
-#             sys.exit()
-#         if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
-#             Player1.give_mod()
-#
-#     # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
-#     if not Player1.god_mode:
-#         Player1.time_to_shoot -= 10
-#     # Отрисовка кол-ва хп и маны
-#     Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
-#     Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
-#     Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
-#     # Восполнение маны
-#     Player1.up_mana()
-#     # Отрисовка хп мобов
-#     # for mob in mobs:
-#     #     if mob.NOW_HP != 0:
-#     #         Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
-#
-#     # Отрисовка спрайтов
-#
-#     player_group.update(return_skin())
-#     projectales.update()
-#     mod_group.update()
-#
-#     all_sprites.draw(screen)
-#     # Отрисовка всех доп.статов на экране
-#     ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
-#     money_fon = FONT.render(str(COUNT_MONEY), True, (195, 176, 165))
-#     rect_money = money_fon.get_rect()
-#     screen.blit(ren_fon, (0, 0))
-#     screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
-#     # Сохранение кол-ва монеток и максимального кол-ва килов
-#     with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
-#         BEST_KILL_COUNT = int(mn1.read())
-#         if BEST_KILL_COUNT < KILL_COUNT:
-#             BEST_KILL_COUNT = KILL_COUNT
-#     with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
-#         mn1.write(str(BEST_KILL_COUNT))
-#
-#     # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
-#     kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
-#     screen.blit(kills, (0, 70))
-#     best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
-#     w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
-#     screen.blit(w, (410, 0))
-#     screen.blit(best_kills, (0, 110))
-#     # Вызов волн мобов
-#
-#     wave()
-#
-#     # Смена кадра
-#     pygame.display.flip()
-#     clock.tick(FPS)
-#
-#
-#
-mainest_main()
+if __name__ == '__main__':
+    mainest_main()

@@ -20,6 +20,7 @@ def load_image(name, colorkey=None):
     return image
 
 def load_image_t(name, colorkey=None):
-    return pygame.transform.scale(pygame.transform.flip(load_image(name, colorkey), True, False), (120, 180))
+    return pygame.transform.scale(pygame.transform.flip(load_image(name, colorkey), True, False), (120, 180)), \
+           pygame.transform.scale(load_image(name, colorkey), (120, 180))
 
 

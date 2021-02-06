@@ -1,7 +1,6 @@
 from Settings import *
 
 
-
 class Projectale(pygame.sprite.Sprite):
     def __init__(self, person, person_rect, god_mode=False, left_or_right_x=None, puli_ru=None):
         super().__init__(all_sprites, projectales)
@@ -21,7 +20,8 @@ class Projectale(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = self.pers_pos_x, self.pers_pos_y
 
     def update(self):
-        if not (pygame.sprite.spritecollide(self, map_group, False) or self.rect.topright[0] >= screen.get_width() or self.rect.topright[0] < 0):
+        if not (pygame.sprite.spritecollide(self, map_group, False) or self.rect.topright[0] >= screen.get_width() or
+                self.rect.topright[0] < 0):
             if self.mode:
                 self.rect.x += 100 * self.VX
             else:
@@ -75,5 +75,3 @@ class Indicator:
     def show(self):
         self.obn()
         screen.blit(FONT.render(f'{self.stat}', True, self.COLOR_TEXT), (self.x + 15, 5))
-
-

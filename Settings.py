@@ -4,6 +4,7 @@ import pygame
 from pprint import pprint
 import random as rg
 from Load_image import load_image, load_image_t
+
 pygame.init()
 pygame.mixer.init()
 # ссоздаю группу спрайтов котораая нам понадобится в будущем
@@ -30,7 +31,6 @@ background_music.play(-1)
 
 KEYS = pygame.key.get_pressed()
 
-
 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
 
 # придаю ей начальные настройки при запуске игры
@@ -38,6 +38,13 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
     txt = text.read().split()
     background_music.set_volume(int(txt[0]) / 100)
     player_shoot_mus.set_volume(int(txt[1]) / 100)
+
+
+def music_start_volume(q):
+    with open('volume.txt', encoding='utf-8', mode='r') as text:
+        txt = text.read().split()
+        q.set_volume(int(txt[1]) / 100)
+
 
 # загружаю стартовую локацию при запуске игры
 location = [r'Jungle\jungle.png', r'Jungle\floor.png', r'Jungle\wall.png', range(3, 6)]
@@ -56,4 +63,3 @@ pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireb
         player_shoot_mus, {'damage': 90, 'health': 180, 'mana': 200}]
 # список координат всех квадратов земли на холсте
 map_coords_spisok = []
-

@@ -87,7 +87,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'yes', 'no'])
 
             if self.sender().objectName()[-1] == '6' and self.pushButton_6.isEnabled():
-                if self.pushButton_5.text()[0] == 'К':
+                if self.pushButton_6.text()[0] == 'К':
                     COUNT_MONEY -= 10000
                     txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'location', True)
@@ -189,6 +189,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                         pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
                         player_shoot_mus, {'damage': 65, 'health': 500, 'mana': 225}]
                 self.pereresovka(['', '_2', '_3'], ['no', 'no', 'yes'])
+        music_start_volume(player_shoot_mus)
         self.test_proof_money()
 
     def pereresovka(self, spisok, spisok_yes_no):
@@ -347,6 +348,7 @@ def return_money(n):
     global COUNT_MONEY
     COUNT_MONEY += n
     return COUNT_MONEY
+
 
 def return_mob():
     return mob_animation
