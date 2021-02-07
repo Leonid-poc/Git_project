@@ -305,8 +305,7 @@ class Portal(Game_Object):
             if self.shield_count >= self.shield:
                 self.NOW_HP -= dam
                 self.shield_count = 0
-        else:
-            self.kill()
+
 
     def update(self, q=None):
         self.shield_count += 1
@@ -325,7 +324,8 @@ port = []
 for i in range(4):
     port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
 port.append({'damage': 0, 'health': 700, 'mana': 0})
-portal = Portal(10, 680, port)
+
+
 
 
 def wave():
@@ -344,7 +344,7 @@ def wave():
 
 
 # вызываю определённые классы которые автоматически отрисовывваются
-
+portal = Portal(10, 680, port)
 shop = Shop()
 Settings()
 Money()
@@ -358,6 +358,7 @@ def upgrade():
     pass
 
 def mainest_main():
+
     global KEYS
     while True:
         screen.blit(return_background()[0], (0, 0))
