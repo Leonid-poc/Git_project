@@ -1,6 +1,6 @@
 from build import *
 from Proj import *
-
+from screensaver import *
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
@@ -139,6 +139,7 @@ class Mob(Game_Object):
                 if self.jumping_anim:
                     self.jumping = rg.choice(range(100))
             self.jump(self.jumping == 10)
+
             if self.NOW_HP > 0:
                 Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y - 10, 100, 10).obn()
         else:
@@ -296,8 +297,8 @@ class Portal(Game_Object):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.god_mode = False
-        self.START_HP = 700
-        self.NOW_HP = 700
+        self.START_HP = 1000
+        self.NOW_HP = 1000
 
     def damage(self, dam):
         if self.NOW_HP > 0:
@@ -349,7 +350,12 @@ Settings()
 Money()
 Player1 = Player(0, 500, pers)
 draw_map()
+def check_vol():
+    background_music.load(r'data\Music\background_1.mp3')
+    background_music.play(-1)
 
+def upgrade():
+    pass
 
 def mainest_main():
     global KEYS
@@ -373,18 +379,11 @@ def mainest_main():
         Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
         # Восполнение маны
         Player1.up_mana()
-        # Отрисовка хп мобов
-        # for mob in mobs:
-        #     if mob.NOW_HP != 0:
-        #         Indicator(mob.NOW_HP, mob.START_HP, (255, 0, 0), mob.rect.x, mob.rect.y, 100, 10).obn()
 
         # Отрисовка спрайтов
-
         player_group.update(return_skin())
-
         projectales.update()
         mod_group.update()
-
         all_sprites.draw(screen)
         # Отрисовка всех доп.статов на экране
         ren_fon = FONT.render(f"{int(clock.get_fps())}", True, (255, 255, 255))
@@ -400,7 +399,6 @@ def mainest_main():
         with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
             mn1.write(str(BEST_KILL_COUNT))
 
-        # pygame.draw.rect(screen, (0, 0, 0), (0, 70, 350, 100))
         kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
         screen.blit(kills, (0, 70))
         best_kills = FONT.render(f"Best Kills: {BEST_KILL_COUNT}", True, (255, 255, 255))
@@ -416,5 +414,46 @@ def mainest_main():
         clock.tick(FPS)
 
 
+        if portal.NOW_HP <= 0 or Player1.NOW_HP <= 0:
+            portal.NOW_HP = 0
+            Player1.NOW_HP = 0
+            Player1.NOW_MANA = 0
+            screen.blit(return_background()[0], (0, 0))
+            Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
+            Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
+            Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
+            player_group.update(return_skin())
+            projectales.update()
+            mod_group.update()
+            all_sprites.draw(screen)
+            screen.blit(ren_fon, (0, 0))
+            screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
+            screen.blit(kills, (0, 70))
+            screen.blit(w, (410, 0))
+            screen.blit(best_kills, (0, 110))
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+            end_game()
+
+
+
+def start():
+    while True:
+        screen.blit(Text1, (0, 0))
+
+        KEYS = pygame.key.get_pressed()
+        for i in pygame.event.get():
+            if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
+                exit()
+            if KEYS[pygame.K_F9]:
+                background_music.load(r'data\Music\background_1.mp3')
+                background_music.play(-1)
+                mainest_main()
+                sys.exit()
+        pygame.display.flip()
+
 if __name__ == '__main__':
-    mainest_main()
+    start()
+

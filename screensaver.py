@@ -1,17 +1,41 @@
+from random import randrange
+import os
+
+from new_phis import *
 from build import *
 from Proj import *
 
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((1920, 1080))
+Text1 = load_image(r"Screen\main_screen.png")
 
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-Text1 = load_image(r"Jungle\jungle.png")
-while True:
-    screen.blit(Text1, (0, 0))
+background_music = pygame.mixer.music
+background_music.load(r'data\Music\Screen_music.mp3')
+background_music.play(-1)
+with open('volume.txt', encoding='utf-8', mode='r') as text:
+    txt = text.read().split()
+    background_music.set_volume(int(txt[0]) / 100)
 
-    KEYS = pygame.key.get_pressed()
-    for i in pygame.event.get():
-        if i.type == pygame.MOUSEBUTTONDOWN:
-            sprites_dop.update(i.pos)
-        if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
-            sys.exit()
 
+def lose():
+    render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
+    screen.blit(render, (800, 540))
     pygame.display.flip()
+    clock.tick(15)
+
+def end_game():
+    pygame.mixer.music.stop()
+    b = pygame.mixer.music
+    b.load(r'data\Music\Screen_music.mp3')
+    b.play(-1)
+    while True:
+
+        lose()
+        KEYS = pygame.key.get_pressed()
+        for i in pygame.event.get():
+            if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
+                exit()
+            if KEYS[pygame.K_F9]:
+                os.system('python new_phis.py')
+        pygame.display.flip()
+
