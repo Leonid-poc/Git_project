@@ -358,7 +358,6 @@ def upgrade():
     pass
 
 def mainest_main():
-
     global KEYS
     while True:
         screen.blit(return_background()[0], (0, 0))
@@ -456,5 +455,7 @@ def start():
         pygame.display.flip()
 
 if __name__ == '__main__':
-    start()
-
+    try:
+        start()
+    except Exception:
+        pass

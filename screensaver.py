@@ -1,7 +1,5 @@
 from random import randrange
-from os import system
-import os
-from build import *
+import os, sys
 from Proj import *
 
 clock = pygame.time.Clock()
@@ -17,31 +15,28 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
 
 
 def lose():
-    try:
-        render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
-        screen.blit(render, (800, 540))
-        pygame.display.flip()
-        clock.tick(15)
-    except Exception:
-        pass
+    render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
+    screen.blit(render, (800, 540))
+    pygame.display.flip()
+    clock.tick(15)
 
 def end_game():
-    try:
-        pygame.mixer.music.stop()
-        b = pygame.mixer.music
-        b.load(r'data\Music\Screen_music.mp3')
-        b.play(-1)
-        while True:
-            lose()
-            KEYS = pygame.key.get_pressed()
-            for i in pygame.event.get():
-                if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
-                    exit()
-                if KEYS[pygame.K_F9]:
-                    pygame.quit()
+    pygame.mixer.music.stop()
+    b = pygame.mixer.music
+    b.load(r'data\Music\Screen_music.mp3')
+    b.play(-1)
+    while True:
+        lose()
+        KEYS = pygame.key.get_pressed()
+        for i in pygame.event.get():
+            if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
+                exit()
+            if KEYS[pygame.K_F9]:
+                pygame.quit()
+                if 'new_phis.exe' in os.listdir(path='.'):
+                    os.system('new_phis.exe')
+                else:
                     os.system('new_phis.py')
 
-                pygame.display.flip()
-    except Exception:
-        pass
+            pygame.display.flip()
 
