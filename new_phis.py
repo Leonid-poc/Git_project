@@ -79,8 +79,9 @@ class Mob(Game_Object):
         self.START_MANA = 200
         self.NOW_MANA = 200
         self.jumping = False
+        self.jumping_anim = True
         self.count_jump = 20
-        self.agressian = True if Player1.return_agressor() < 4 else False
+        self.agressian = True if Player1.count_agressors < 4 else False
         if self.agressian:
             Player1.append_agressor()
         self.vx = rg.randrange(4, 7)
@@ -93,10 +94,12 @@ class Mob(Game_Object):
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
             self.count_step += 1
+            self.jumping_anim = False
             for i in pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
                 i.damage(self.characteristics_of_character[2]['damage'])
         else:
             self.image = self.characteristics_of_character[0][1 if self.right_pers else 0]
+            self.jumping_anim = True
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
 
@@ -109,7 +112,8 @@ class Mob(Game_Object):
                 self.proof_font_fall_out_map()
             if self.rect.x > 110 and not self.agressian:
                 self.rect.x -= self.vx
-            elif self.agressian:
+            elif self.agressian and not pygame.sprite.spritecollide(self,
+                                                                    player_group, False, pygame.sprite.collide_mask):
                 raznica = Player1.return_pos()[0] - self.rect.x
                 if raznica == abs(raznica):
                     self.right_pers, self.left_pers = True, False
@@ -132,7 +136,8 @@ class Mob(Game_Object):
                     Monetki_from_mob(self.rect.x, self.rect.y, self.rect.w, self.rect.h)
 
             if not self.jumping and pygame.sprite.spritecollide(self, map_group, False, pygame.sprite.collide_mask):
-                self.jumping = rg.choice(range(100))
+                if self.jumping_anim:
+                    self.jumping = rg.choice(range(100))
             self.jump(self.jumping == 10)
             if self.NOW_HP > 0:
                 Indicator(self.NOW_HP, self.START_HP, (255, 0, 0), self.rect.x, self.rect.y - 10, 100, 10).obn()
@@ -184,9 +189,6 @@ class Player(Game_Object):
 
     def kill_agressor(self):
         self.count_agressors -= 1
-
-    def return_agressor(self):
-        return self.count_agressors
 
     # восстановление маны
     def up_mana(self):
