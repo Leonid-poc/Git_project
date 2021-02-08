@@ -280,7 +280,7 @@ class MyPashalka(QMainWindow, Ui_MainWindow_2):
         self.setupUi(self)
         self.setWindowTitle('Пасхалка')
         self.move = QMovie('data\\Other\\poop.gif')
-        print(self.label_2.size())
+
         self.move.setScaledSize(QSize(800, 440))
         self.label_2.setMovie(self.move)
         self.move.start()

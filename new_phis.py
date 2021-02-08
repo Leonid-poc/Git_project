@@ -370,8 +370,6 @@ def mainest_main():
             if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
                 Player1.give_mod()
             # if i.type == pygame.KEYDOWN:
-            if KEYS[pygame.K_n] + KEYS[pygame.K_e] + KEYS[pygame.K_g] + KEYS[pygame.K_r]:
-                qt_start_pashalka()
 
         # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
         if not Player1.god_mode:
@@ -442,7 +440,7 @@ def mainest_main():
 
 
 def start():
-    reloading_easter_eggs = 30
+    reloading_easter_eggs = 60
     while True:
         screen.blit(Text1, (0, 0))
         if reloading_easter_eggs > 0:
@@ -452,13 +450,13 @@ def start():
             if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
                 exit()
             if KEYS[pygame.K_F9]:
-                    background_music.load(r'data\Music\background_1.mp3')
-                    background_music.play(-1)
-                    mainest_main()
-                    sys.exit()
+                background_music.load(r'data\Music\background_1.mp3')
+                background_music.play(-1)
+                mainest_main()
+                sys.exit()
         if KEYS[pygame.K_n] + KEYS[pygame.K_e] + KEYS[pygame.K_g] + KEYS[pygame.K_r] == 3 and \
-                reloading_easter_eggs == 0:
-            reloading_easter_eggs = 30
+                    reloading_easter_eggs == 0:
+            reloading_easter_eggs = 60
             qt_start_pashalka()
         pygame.display.flip()
 
