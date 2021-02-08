@@ -1,5 +1,5 @@
 from random import randrange
-import os, sys
+import os
 from Proj import *
 
 clock = pygame.time.Clock()

@@ -36,6 +36,13 @@ class Ui_MainWindow_2(object):
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy)
+        self.label_2.setText("")
+        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
         MainWindow_2.setCentralWidget(self.centralwidget)
@@ -53,5 +60,4 @@ class Ui_MainWindow_2(object):
     def retranslateUi(self, MainWindow_2):
         _translate = QtCore.QCoreApplication.translate
         MainWindow_2.setWindowTitle(_translate("MainWindow_2", "MainWindow"))
-        self.label.setText(_translate("MainWindow_2", "Артём Олегович когда оцениваетнашу работу би лайк:"))
-        self.label_2.setText(_translate("MainWindow_2", "TextLabel"))
+        self.label.setText(_translate("MainWindow_2", "Артём Олегович когда оценивает нашу работу би лайк:"))

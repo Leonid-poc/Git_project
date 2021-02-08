@@ -1,5 +1,6 @@
 import sys, json
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPixmap, QMovie
 from UI_shop import Ui_MainWindow
 from UI_settings import Ui_MainWindow_1
@@ -271,12 +272,16 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             background_music.set_volume(self.horizontalSlider.value() / 100)
             player_shoot_mus.set_volume(self.horizontalSlider_2.value() / 100)
 
+
+# класс нашей пасхалки)))
 class MyPashalka(QMainWindow, Ui_MainWindow_2):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle('Пасхалка')
         self.move = QMovie('data\\Other\\poop.gif')
+        print(self.label_2.size())
+        self.move.setScaledSize(QSize(800, 440))
         self.label_2.setMovie(self.move)
         self.move.start()
 
@@ -286,12 +291,13 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-def qt_pashalka_shop():
+def qt_start_pashalka():
     app = QApplication(sys.argv)
     ex = MyPashalka()
     ex.show()
     sys.excepthook = except_hook
     app.exec()
+
 
 # запуск окна Магазина
 def qt_start_shop():
@@ -319,9 +325,6 @@ def draw_map():
         for j in enumerate(i[1]):
             if j[1] == 'q':
                 Map(location[1], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
-                    screen.get_height() // len(location_code) * i[0] + 10)
-            if j[1] == 'w':
-                Map(location[2], location_code, screen.get_width() // len(location_code[0]) * j[0] + 10,
                     screen.get_height() // len(location_code) * i[0] + 10)
 
 

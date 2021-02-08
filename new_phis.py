@@ -1,6 +1,8 @@
 from build import *
-from Proj import *
 from screensaver import *
+from Proj import *
+import random as rg
+
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
@@ -306,7 +308,6 @@ class Portal(Game_Object):
                 self.NOW_HP -= dam
                 self.shield_count = 0
 
-
     def update(self, q=None):
         self.shield_count += 1
         self.count_step %= self.STEP * 4
@@ -324,8 +325,6 @@ port = []
 for i in range(4):
     port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
 port.append({'damage': 0, 'health': 700, 'mana': 0})
-
-
 
 
 def wave():
@@ -350,12 +349,12 @@ Settings()
 Money()
 Player1 = Player(0, 500, pers)
 draw_map()
+
+
 def check_vol():
     background_music.load(r'data\Music\background_1.mp3')
     background_music.play(-1)
 
-def upgrade():
-    pass
 
 def mainest_main():
     global KEYS
@@ -413,7 +412,6 @@ def mainest_main():
         pygame.display.flip()
         clock.tick(FPS)
 
-
         if portal.NOW_HP <= 0 or Player1.NOW_HP <= 0:
             portal.NOW_HP = 0
             Player1.NOW_HP = 0
@@ -438,7 +436,6 @@ def mainest_main():
             end_game()
 
 
-
 def start():
     while True:
         screen.blit(Text1, (0, 0))
@@ -453,6 +450,7 @@ def start():
                 mainest_main()
                 sys.exit()
         pygame.display.flip()
+
 
 if __name__ == '__main__':
     try:

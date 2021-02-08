@@ -1,8 +1,6 @@
 from map import *
 # инициализируем пайгем и звук из пайгейма
 import pygame
-from pprint import pprint
-import random as rg
 from Load_image import load_image, load_image_t
 
 pygame.init()
@@ -15,7 +13,6 @@ projectales = pygame.sprite.Group()
 mod_group = pygame.sprite.Group()
 money_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-
 # задаю кол-во кадровв в секунду и размер экрана в данном случае на весь экран
 FPS = 60
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
