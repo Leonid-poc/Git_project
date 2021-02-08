@@ -1,8 +1,9 @@
 import sys, json
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QMovie
 from UI_shop import Ui_MainWindow
 from UI_settings import Ui_MainWindow_1
+from UI_pashalka import Ui_MainWindow_2
 from Settings import *
 from Load_image import load_image, load_image_t
 
@@ -270,11 +271,27 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             background_music.set_volume(self.horizontalSlider.value() / 100)
             player_shoot_mus.set_volume(self.horizontalSlider_2.value() / 100)
 
+class MyPashalka(QMainWindow, Ui_MainWindow_2):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Пасхалка')
+        self.move = QMovie('data\\Other\\poop.gif')
+        self.label_2.setMovie(self.move)
+        self.move.start()
+
 
 # проверка ошибок
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
+
+def qt_pashalka_shop():
+    app = QApplication(sys.argv)
+    ex = MyPashalka()
+    ex.show()
+    sys.excepthook = except_hook
+    app.exec()
 
 # запуск окна Магазина
 def qt_start_shop():
