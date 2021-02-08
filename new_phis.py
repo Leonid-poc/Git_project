@@ -131,7 +131,7 @@ class Mob(Game_Object):
                 if self.NOW_HP <= 0:
                     with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
                         COUNT_MONEY = return_money(rg.choice(return_background()[1]))
-                        txt.write(str(interpreter(COUNT_MONEY)))
+                        txt.write(str(scrambler(COUNT_MONEY)))
                     self.killing = True
                     mobs.pop()
                     KILL_COUNT += 1
@@ -396,7 +396,7 @@ def mainest_main():
         screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
         # Сохранение кол-ва монеток и максимального кол-ва килов
         with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
-            BEST_KILL_COUNT = interpreter(mn1.read())
+            BEST_KILL_COUNT = int(interpreter(mn1.read()))
 
             if BEST_KILL_COUNT < KILL_COUNT:
                 BEST_KILL_COUNT = KILL_COUNT
@@ -464,7 +464,5 @@ def start():
 
 
 if __name__ == '__main__':
-    try:
         start()
-    except Exception as ex:
-        print(ex)
+

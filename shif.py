@@ -15,7 +15,7 @@ def scrambler(password):
     for i in str(password):
         i = keys[int(i)]
         answer += i
-    return int(answer)
+    return answer
 
 def interpreter(password):
     keys = {
@@ -31,8 +31,9 @@ def interpreter(password):
         "g45i": 0
     }
     answer = ""
+    password = str(password)
     for i in range(0, len(password), 4):
         answer += str(keys[password[i:i+4]])
-    return int(answer)
+    return answer
 
 
