@@ -2,7 +2,7 @@ from map import *
 # инициализируем пайгем и звук из пайгейма
 import pygame
 from Load_image import load_image, load_image_t
-
+from shif import *
 pygame.init()
 pygame.mixer.init()
 # ссоздаю группу спрайтов котораая нам понадобится в будущем
@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 FONT = pygame.font.SysFont('rockwell', 50)
 
 with open("MONEY.txt", encoding="utf-8", mode="r") as mn:
-    COUNT_MONEY = int(mn.read())
+    COUNT_MONEY = int(interpreter(mn.read()))
 
 # музыка заднего фона
 background_music = pygame.mixer.music

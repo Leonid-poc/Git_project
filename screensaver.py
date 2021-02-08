@@ -19,8 +19,8 @@ def lose():
     render1 = FONT.render('Play - F9', 50, (randrange(60, 200), 0, 0))
     render2 = FONT.render('Exit - F10', 50, (randrange(60, 200), 0, 0))
     screen.blit(render, (800, 540))
-    screen.blit(render1, (800, 740))
-    screen.blit(render2, (800, 780))
+    screen.blit(render1, (800, 640))
+    screen.blit(render2, (800, 680))
     pygame.display.flip()
     clock.tick(15)
 

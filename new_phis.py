@@ -2,7 +2,7 @@ from build import *
 from screensaver import *
 from Proj import *
 import random as rg
-
+from shif import *
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
@@ -131,7 +131,7 @@ class Mob(Game_Object):
                 if self.NOW_HP <= 0:
                     with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
                         COUNT_MONEY = return_money(rg.choice(return_background()[1]))
-                        txt.write(str(COUNT_MONEY))
+                        txt.write(str(interpreter(COUNT_MONEY)))
                     self.killing = True
                     mobs.pop()
                     KILL_COUNT += 1
@@ -154,6 +154,7 @@ class Mob(Game_Object):
                 if self.agressian:
                     Player1.kill_agressor()
                 self.kill()
+
 
 
 # класс игрока, который отвечает за любые события и изменения персонажа
@@ -369,7 +370,7 @@ def mainest_main():
             if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
                 Player1.give_mod()
             # if i.type == pygame.KEYDOWN:
-            if KEYS[pygame.K_n] and KEYS[pygame.K_e] and KEYS[pygame.K_g] and KEYS[pygame.K_r]:
+            if KEYS[pygame.K_n] + KEYS[pygame.K_e] + KEYS[pygame.K_g] + KEYS[pygame.K_r]:
                 qt_start_pashalka()
 
         # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
@@ -395,11 +396,12 @@ def mainest_main():
         screen.blit(money_fon, (screen.get_width() - 150 - rect_money.w, 0))
         # Сохранение кол-ва монеток и максимального кол-ва килов
         with open('KILL_COUNT.txt', encoding='utf-8', mode='r') as mn1:
-            BEST_KILL_COUNT = int(mn1.read())
+            BEST_KILL_COUNT = interpreter(mn1.read())
+
             if BEST_KILL_COUNT < KILL_COUNT:
                 BEST_KILL_COUNT = KILL_COUNT
         with open("KILL_COUNT.txt", encoding="utf-8", mode="w") as mn1:
-            mn1.write(str(BEST_KILL_COUNT))
+            mn1.write(str(scrambler(BEST_KILL_COUNT)))
 
         kills = FONT.render(f"Kills: {KILL_COUNT}", True, (255, 255, 255))
         screen.blit(kills, (0, 70))
