@@ -440,18 +440,24 @@ def mainest_main():
 
 
 def start():
+    reloading_easter_eggs = 30
     while True:
         screen.blit(Text1, (0, 0))
-
+        if reloading_easter_eggs > 0:
+            reloading_easter_eggs -= 1
         KEYS = pygame.key.get_pressed()
         for i in pygame.event.get():
             if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
                 exit()
             if KEYS[pygame.K_F9]:
-                background_music.load(r'data\Music\background_1.mp3')
-                background_music.play(-1)
-                mainest_main()
-                sys.exit()
+                    background_music.load(r'data\Music\background_1.mp3')
+                    background_music.play(-1)
+                    mainest_main()
+                    sys.exit()
+        if KEYS[pygame.K_n] + KEYS[pygame.K_e] + KEYS[pygame.K_g] + KEYS[pygame.K_r] == 3 and \
+                reloading_easter_eggs == 0:
+            reloading_easter_eggs = 30
+            qt_start_pashalka()
         pygame.display.flip()
 
 
