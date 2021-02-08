@@ -14,6 +14,7 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
     background_music.set_volume(int(txt[0]) / 100)
 
 
+# эта фун-ия вызывается когда ты проиграл на окно пайгейм инструкция что делать дальше
 def lose():
     render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
     render1 = FONT.render('Play - F9', 50, (randrange(60, 200), 0, 0))
@@ -24,6 +25,7 @@ def lose():
     pygame.display.flip()
     clock.tick(15)
 
+# эта фун-ия вызывается когда игра окончена
 def end_game():
     pygame.mixer.music.stop()
     b = pygame.mixer.music

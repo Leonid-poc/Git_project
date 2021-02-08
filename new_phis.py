@@ -3,12 +3,15 @@ from screensaver import *
 from Proj import *
 import random as rg
 from shif import *
+
 # инициализирую пайтон и добавляю переменные часы для того чтобы выставить значение фпс
 pygame.init()
 clock = pygame.time.Clock()
+# кол-во убийств
 KILL_COUNT = 0
 
 
+# главный класс от которого наследуются многое другое
 class Game_Object(pygame.sprite.Sprite):
     def __init__(self, x, y, pers, group):
         super(Game_Object, self).__init__(all_sprites, group)
@@ -28,11 +31,13 @@ class Game_Object(pygame.sprite.Sprite):
         self.STEP = 20
         self.count_step = 0
 
-    # проверка не провалился ли слегка игрок под карту
+    # проверка не провалился ли слегка игрок или моб под карту
     def proof_font_fall_out_map(self):
         while self.rect.bottom > map_coords_spisok[0] + 3:
             self.rect.y -= 1
 
+    # метод который делает прыжок если это игрок то в зависимости когда нажмёт пробел, если моб в зависимости от
+    # судьбы рандома))
     def jump(self, proof):
         if proof:
             if self.count_jump >= -20:
@@ -57,16 +62,20 @@ class Game_Object(pygame.sprite.Sprite):
         else:
             self.jumping = False
 
+    # возвращает ману объекта
     def return_mana(self):
         return self.NOW_MANA, self.START_MANA
 
+    # возвращает ХП объекта
     def return_hp(self):
         return self.NOW_HP, self.START_HP
 
+    # возвращает позицию объекта
     def return_pos(self):
         return self.rect.x, self.rect.y
 
 
+# класс который создает объект моба
 class Mob(Game_Object):
     def __init__(self, x, y, pers, group=mod_group):
         super(Mob, self).__init__(x, y, pers, group)
@@ -88,6 +97,7 @@ class Mob(Game_Object):
             Player1.append_agressor()
         self.vx = rg.randrange(4, 7)
 
+    # анимация ударов моба
     def animation(self):
         x, y = self.rect.x, self.rect.y
         if pygame.sprite.spritecollide(self, player_group, False, pygame.sprite.collide_mask):
@@ -105,6 +115,8 @@ class Mob(Game_Object):
             self.rect = self.image.get_rect()
             self.rect.x, self.rect.y = x, y
 
+    # здесь прописанно всё самое главное когда будет моб прыгать когда поворачивать за игроком а когда идти к порталу
+    # куда идти с какой скоростью и т.д.
     def update(self):
         if not self.killing:
             global COUNT_MONEY, KILL_COUNT
@@ -156,7 +168,6 @@ class Mob(Game_Object):
                 self.kill()
 
 
-
 # класс игрока, который отвечает за любые события и изменения персонажа
 class Player(Game_Object):
     count_agressors = 0
@@ -178,6 +189,7 @@ class Player(Game_Object):
         else:
             self.god_mode = False
 
+    # востановление характеристик игрока в случае если что то поломалось
     def update_static_pers(self):
         self.START_HP = self.characteristics_of_character[5]['health']
         self.NOW_HP = self.characteristics_of_character[5]['health']
@@ -188,9 +200,11 @@ class Player(Game_Object):
     def return_now_skin(self):
         return self.image
 
+    # добавления одного моба который будет ходить за игроком
     def append_agressor(self):
         self.count_agressors += 1
 
+    # вычитание одного моба который будет ходить а игроком
     def kill_agressor(self):
         self.count_agressors -= 1
 
@@ -206,14 +220,17 @@ class Player(Game_Object):
         else:
             self.NOW_MANA = 0
 
+    # получение дамага от мобов
     def damage(self, dam):
         if self.shield_count >= self.shield and not (self.god_mode):
             self.NOW_HP -= dam
             self.shield_count = 0
 
+    # обратное методу damage т.е. мы бьём кого либо
     def return_damage(self):
         return self.characteristics_of_character[5]['damage']
 
+    # здесь прописанно практически тоже самое что и в классе Mob в методе update
     def update(self, image):
         if not self.killing:
             self.shield_count += 1
@@ -289,7 +306,7 @@ class Player(Game_Object):
             else:
                 self.kill()
 
-
+# класс портала который создаёт баз нашему игроку
 class Portal(Game_Object):
     def __init__(self, x, y, pers, group=player_group):
         super(Portal, self).__init__(x, y, pers, group)
@@ -303,12 +320,14 @@ class Portal(Game_Object):
         self.START_HP = 1000
         self.NOW_HP = 1000
 
+    # опять же получение дамага от кого либо
     def damage(self, dam):
         if self.NOW_HP > 0:
             if self.shield_count >= self.shield:
                 self.NOW_HP -= dam
                 self.shield_count = 0
 
+    # анимация портала
     def update(self, q=None):
         self.shield_count += 1
         self.count_step %= self.STEP * 4
@@ -318,6 +337,7 @@ class Portal(Game_Object):
         self.count_step += 1
 
 
+# создание нужных переменн и добавлние картинок к порталу
 mobs = []
 count_mobs = 3
 wave_number = 0
@@ -327,7 +347,7 @@ for i in range(4):
     port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
 port.append({'damage': 0, 'health': 700, 'mana': 0})
 
-
+# функция которая создаёт волны мобов по особой формуле
 def wave():
     global count_mobs, wave_number, mobs
     if len(mobs) == 0:
@@ -352,11 +372,12 @@ Player1 = Player(0, 500, pers)
 draw_map()
 
 
+# починка бага со звуком он иногда пропадает
 def check_vol():
     background_music.load(r'data\Music\background_1.mp3')
     background_music.play(-1)
 
-
+# прописанн главный игровой цикл
 def mainest_main():
     global KEYS
     while True:
@@ -369,7 +390,6 @@ def mainest_main():
                 sys.exit()
             if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
                 Player1.give_mod()
-            # if i.type == pygame.KEYDOWN:
 
         # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
         if not Player1.god_mode:
@@ -439,6 +459,7 @@ def mainest_main():
             end_game()
 
 
+# метод с которого всё начинается
 def start():
     reloading_easter_eggs = 60
     while True:
@@ -454,13 +475,16 @@ def start():
                 background_music.play(-1)
                 mainest_main()
                 sys.exit()
-        if KEYS[pygame.K_n] + KEYS[pygame.K_e] + KEYS[pygame.K_g] + KEYS[pygame.K_r] == 3 and \
-                    reloading_easter_eggs == 0:
+        if KEYS[pygame.K_a] + KEYS[pygame.K_u] + KEYS[pygame.K_f] == 3 and \
+                reloading_easter_eggs == 0:
             reloading_easter_eggs = 60
             qt_start_pashalka()
         pygame.display.flip()
 
 
 if __name__ == '__main__':
+    # сделали так потому что вылетает инопрешеленская ошибка
+    try:
         start()
-
+    except Exception:
+        pass

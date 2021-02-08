@@ -20,6 +20,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle('Магазин')
         self.update_info()
+        # создание перменных цвета и градиента и подключение кнопок к функциям
         self.color_no = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
                         'stop:0 rgba(0, 0, 0, 255), stop:1 rgba(176, 0, 255, 255));'
         self.color_yes = 'background-color: qlineargradient(spread:pad, x1:0, y1:0.943, x2:1, y2:0.944, ' \
@@ -30,6 +31,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
 
         self.pushButton.clicked.connect(self.run_pers)
         self.pushButton_4.clicked.connect(self.run_loc)
+        # проверка что у нас купленны или достаточно денег для покупки персов или локаций
         self.proof_price()
         self.pushButton_2.clicked.connect(self.run_pers)
         self.pushButton_3.clicked.connect(self.run_pers)
@@ -57,6 +59,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
             self.pushButton_6.setEnabled(False)
         # метод сччитывает какую локацию выбрал игрок и ставит её
 
+    # метод который ставит локацию в свою игру если не купленно то покупает не обращайте внимание тут
+    # просто очень приторно а так всё интуитивно понятно
     def run_loc(self):
         global background, location_code, location, background_music, COUNT_MONEY, mob_animation
         map_group.empty()
@@ -106,6 +110,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         background = [load_image(location[0]), location[3]]
         draw_map()
 
+    # метод который берёт информацию из игры и делает нужные парраметры в магазине
     def update_info(self):
         with open('shop_pers_loc.json') as FAQ:
             data = json.load(FAQ)
@@ -136,6 +141,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         if data["desert"]["hero"]:
             self.pushButton_3.setText('Guns N Roses')
 
+    # метод который так же обновляет информацию но только в нашей JSON файле
     def update_json(self, loc, obj, boool):
         with open('shop_pers_loc.json') as FAQ:
             data = json.load(FAQ)
@@ -143,6 +149,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
             data[loc][obj] = boool
             json.dump(data, FAQ)
 
+    # метод который проверяет не пустой ли файл с деньгами
     def test_proof_money(self):
         proof = False
         with open('MONEY.txt', mode='r', encoding='utf-8') as txt:
@@ -150,7 +157,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 proof = True
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if proof:
-                txt.write(str(COUNT_MONEY))
+                txt.write(scrambler(COUNT_MONEY))
 
     # метод который ставит персонажа который выбрал пользователь
     def run_pers(self):
@@ -194,6 +201,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
         music_start_volume(player_shoot_mus)
         self.test_proof_money()
 
+    # метод который перерисовыйвает виджеты в QT
     def pereresovka(self, spisok, spisok_yes_no):
         exec(f'self.label{spisok[0]}.setStyleSheet(self.color_{spisok_yes_no[0]})')
         exec(f'self.label{spisok[1]}.setStyleSheet(self.color_{spisok_yes_no[1]})')
@@ -273,7 +281,7 @@ class MySettings(QMainWindow, Ui_MainWindow_1):
             player_shoot_mus.set_volume(self.horizontalSlider_2.value() / 100)
 
 
-# класс нашей пасхалки)))
+# класс нашей пасхалки))) который вызывается на сочетание клавиш AUF
 class MyPashalka(QMainWindow, Ui_MainWindow_2):
     def __init__(self):
         super().__init__()
@@ -291,6 +299,7 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
+# фун-ия которая вызывает пасхалку
 def qt_start_pashalka():
     app = QApplication(sys.argv)
     ex = MyPashalka()
@@ -356,20 +365,24 @@ class Settings(pygame.sprite.Sprite):
             qt_start_settings()
 
 
+# фун-ия возврата фона из этого файла
 def return_background():
     return background
 
 
+# фун-ия возврата характеристик перса из этого файла
 def return_skin():
     return pers
 
 
+# фун-ия возврата денег из этого файла
 def return_money(n):
     global COUNT_MONEY
     COUNT_MONEY += n
     return COUNT_MONEY
 
 
+# фун-ия возврата хар-ик моба из этого файла
 def return_mob():
     return mob_animation
 
