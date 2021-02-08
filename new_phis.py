@@ -368,6 +368,9 @@ def mainest_main():
                 sys.exit()
             if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
                 Player1.give_mod()
+            # if i.type == pygame.KEYDOWN:
+            if KEYS[pygame.K_n] and KEYS[pygame.K_e] and KEYS[pygame.K_g] and KEYS[pygame.K_r]:
+                qt_start_pashalka()
 
         # Если у игрока не включен год мод, от появляется кул даун - воот он проходит
         if not Player1.god_mode:

@@ -16,7 +16,11 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
 
 def lose():
     render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
+    render1 = FONT.render('Play - F9', 50, (randrange(60, 200), 0, 0))
+    render2 = FONT.render('Exit - F10', 50, (randrange(60, 200), 0, 0))
     screen.blit(render, (800, 540))
+    screen.blit(render1, (800, 740))
+    screen.blit(render2, (800, 780))
     pygame.display.flip()
     clock.tick(15)
 
