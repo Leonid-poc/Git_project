@@ -1,3 +1,5 @@
+import pygame as pygame
+
 from build import *
 from screensaver import *
 from Proj import *
@@ -78,6 +80,7 @@ class Game_Object(pygame.sprite.Sprite):
 # класс который создает объект моба
 class Mob(Game_Object):
     def __init__(self, x, y, pers, group=mod_group):
+
         super(Mob, self).__init__(x, y, pers, group)
         self.characteristics_of_character = pers
         self.right_pers, self.left_pers = False, True
