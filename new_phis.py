@@ -464,6 +464,7 @@ def mainest_main():
 
 # метод с которого всё начинается
 def start():
+
     reloading_easter_eggs = 60
     while True:
         screen.blit(Text1, (0, 0))
