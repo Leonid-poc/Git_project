@@ -35,4 +35,4 @@ def find_business(ll, spn, request, locale="ru_RU"):
 
 
 from pprint import pprint
-pprint(find_business('47.588392,55.734036', '0.952069,0.800552', 'sexshop'))
+pprint(find_business('47.588392,55.734036', '0.952069,0.900552', 'ArtomOlegovich'))
