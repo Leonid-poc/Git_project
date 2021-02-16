@@ -309,6 +309,7 @@ class Player(Game_Object):
             else:
                 self.kill()
 
+
 # класс портала который создаёт баз нашему игроку
 class Portal(Game_Object):
     def __init__(self, x, y, pers, group=player_group):
