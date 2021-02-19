@@ -1,38 +1,50 @@
-import requests
+import os
+
+import pygame as pg
+import sys, requests
+from PIL import Image
+from io import BytesIO
+
+pg.init()
+coords = input()
+z = 7
+spn = input()
+clock = pg.time.Clock()
 
 
-def find_businesses(ll, spn, request, locale="ru_RU"):
-    search_api_server = "https://search-maps.yandex.ru/v1/"
-    api_key = "11a9be5e-b358-4253-bda3-4a9765b0ba93"
-    search_params = {
-        "apikey": api_key,
-        "text": request,
-        "lang": locale,
-        "ll": ll,
-        "spn": spn,
-        "type": "biz"
+def get_img():
+    params = {
+        'll': coords,
+        'size': '450,450',
+        'l': 'sat',
+        'z': z
     }
+    w = requests.get(f"https://static-maps.yandex.ru/1.x/?", params)
+    map_file = "image.png"
+    if os.path.exists(map_file):
+        os.remove(map_file)
+    with open(map_file, "wb") as file:
+        file.write(w.content)
 
-    response = requests.get(search_api_server, params=search_params)
-    if not response:
-        raise RuntimeError(
-            f"""Ошибка выполнения запроса:
-            {search_api_server}
-            Http статус: {response.status_code} ({response.reason})""")
-
-    # Преобразуем ответ в json-объект
-    json_response = response.json()
-
-    # Получаем первую найденную организацию.
-    organizations = json_response["features"]
-    return organizations
+    return pg.image.load(map_file)
 
 
-def find_business(ll, spn, request, locale="ru_RU"):
-    orgs = find_businesses(ll, spn, request, locale=locale)
-    if len(orgs):
-        return orgs[0]
+pg.display.set_caption('Маша_Редиска№1_Льоньа')
+img = get_img()
+size = img.get_size()
+screen = pg.display.set_mode(size)
 
-
-from pprint import pprint
-pprint(find_business('47.588392,55.734036', '0.952069,0.900552', 'ArtomOlegovich'))
+while True:
+    screen.fill('black')
+    screen.blit(img, (0, 0))
+    for i in pg.event.get():
+        if i.type == pg.QUIT:
+            exit()
+        if i.type == pg.KEYDOWN:
+            if i.key == pg.K_PAGEDOWN and z > 0:
+                z -= 1
+            if i.key == pg.K_PAGEUP and z < 20:
+                z += 1
+    img = get_img()
+    clock.tick(1)
+    pg.display.flip()
