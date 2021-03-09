@@ -3,8 +3,8 @@ import os
 from Proj import *
 
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((1920, 1080))
-Text1 = load_image(r"Screen\main_screen.png")
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+Text1 = pygame.transform.scale(load_image(r"Screen\main_screen.png"), screen.get_size())
 
 background_music = pygame.mixer.music
 background_music.load(r'data\Music\Screen_music.mp3')
@@ -16,12 +16,12 @@ with open('volume.txt', encoding='utf-8', mode='r') as text:
 
 # эта фун-ия вызывается когда ты проиграл на окно пайгейм инструкция что делать дальше
 def lose():
-    render = FONT.render('YOU DIED', 50, (randrange(60, 200), 0, 0))
-    render1 = FONT.render('Play - F9', 50, (randrange(60, 200), 0, 0))
-    render2 = FONT.render('Exit - F10', 50, (randrange(60, 200), 0, 0))
-    screen.blit(render, (800, 540))
-    screen.blit(render1, (800, 640))
-    screen.blit(render2, (800, 680))
+    render = FONT.render('YOU DIED', 50, (randrange(100, 255), 0, 0))
+    render1 = FONT.render('Play - F9', 50, (randrange(100, 255), 0, 0))
+    render2 = FONT.render('Exit - F10', 50, (randrange(100, 255), 0, 0))
+    screen.blit(render, (W_proc * 41.66, H_proc * 50))
+    screen.blit(render1, (W_proc * 41.66, H_proc * 59.25))
+    screen.blit(render2, (W_proc * 41.66, H_proc * 62.96))
     pygame.display.flip()
     clock.tick(15)
 

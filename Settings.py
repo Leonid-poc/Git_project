@@ -20,7 +20,8 @@ FONT = pygame.font.SysFont('rockwell', 50)
 
 with open("MONEY.txt", encoding="utf-8", mode="r") as mn:
     COUNT_MONEY = int(interpreter(mn.read()))
-
+W_proc, H_proc = screen.get_width() // 100, screen.get_height() // 100
+WEIGHT, HEIGHT = 1920, 1080
 # музыка заднего фона
 background_music = pygame.mixer.music
 background_music.load(r'data\Music\background_1.mp3')
@@ -50,11 +51,12 @@ mob_animation = [load_image_t(r'Jungle\jungle_mob.png'),
                  [load_image_t(r'Jungle\jungle_mob1.png'), load_image_t(r'Jungle\jungle_mob2.png'),
                   load_image_t(r'Jungle\jungle_mob3.png')], {'damage': 30, 'health': 180, 'mana': None}]
 # загружаю задний фон по дефолту
-background = [load_image(location[0]), location[3]]
+background = [pygame.transform.scale(load_image(location[0]), screen.get_size()), location[3]]
 # задаю карту из списка по дефолту
 location_code = JUNGLE
 # задаю скин игрока по дефолту
-pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (int(screen.get_width() / 16),
+                                                                          int(screen.get_height() / 6)))
 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
         pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
         player_shoot_mus, {'damage': 90, 'health': 180, 'mana': 200}]

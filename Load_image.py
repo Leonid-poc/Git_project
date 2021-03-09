@@ -2,6 +2,9 @@ import os
 import sys
 import pygame
 
+import ctypes
+user32 = ctypes.windll.user32
+size = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 # функция для адекватной загрузки картинок
 def load_image(name, colorkey=None):
@@ -23,5 +26,6 @@ def load_image(name, colorkey=None):
 
 # фун-ия которая возвращает две картикни флипнутая и нет
 def load_image_t(name, colorkey=None):
-    return pygame.transform.scale(pygame.transform.flip(load_image(name, colorkey), True, False), (120, 180)), \
-           pygame.transform.scale(load_image(name, colorkey), (120, 180))
+    return pygame.transform.scale(pygame.transform.flip(load_image(name, colorkey), True, False),
+                                  (size[0] // 16, size[1] // 6)), \
+           pygame.transform.scale(load_image(name, colorkey), (size[0] // 16, size[1] // 6))

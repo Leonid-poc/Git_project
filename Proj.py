@@ -14,9 +14,11 @@ class Projectale(pygame.sprite.Sprite):
         self.pers_pos_x, self.pers_pos_y = person_rect.x - self.pos_project, \
                                            person_rect.y + person_rect.h / 2 - 25
         if self.mode:
-            self.image = pygame.transform.scale(self.IMAGE_X, (180, 108))
+            self.image = pygame.transform.scale(self.IMAGE_X, (int(screen.get_width() / 10.666),
+                                                               int(screen.get_height() / 10)))
         else:
-            self.image = pygame.transform.scale(self.IMAGE_X, (100, 50))
+            self.image = pygame.transform.scale(self.IMAGE_X, (int(screen.get_width() / 19.2),
+                                                               int(screen.get_height() / 21.6)))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = self.pers_pos_x, self.pers_pos_y
 
@@ -36,7 +38,8 @@ class Projectale(pygame.sprite.Sprite):
 class Monetki_from_mob(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h):
         super(Monetki_from_mob, self).__init__(all_sprites, mod_group)
-        self.image = pygame.transform.scale(load_image(r'Other\gold.png'), (50, 50))
+        self.image = pygame.transform.scale(load_image(r'Other\gold.png'), (int(W_proc * 2.5),
+                                                                                   int(W_proc * 2.5)))
         self.rect = self.image.get_rect()
         self.step = 100
         self.rect.x = x + (w / 2) - (self.rect.w / 2)
@@ -57,9 +60,10 @@ class Monetki_from_mob(pygame.sprite.Sprite):
 class Money(pygame.sprite.Sprite):
     def __init__(self):
         super(Money, self).__init__(all_sprites, money_group)
-        self.image = pygame.transform.scale(load_image(r'Other\poket_money.png'), (50, 50))
+        self.image = pygame.transform.scale(load_image(r'Other\poket_money.png'), (int(W_proc * 2.5),
+                                                                                   int(W_proc * 2.5)))
         self.rect = self.image.get_rect()
-        self.rect.x = screen.get_width() - 150
+        self.rect.x = screen.get_width() - W_proc * 7.5
         self.rect.y = 0
 
 

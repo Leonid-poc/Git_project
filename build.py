@@ -107,7 +107,7 @@ class MyShop(QMainWindow, Ui_MainWindow):
                 background_music.play(-1)
                 self.pereresovka(['_4', '_5', '_6'], ['no', 'no', 'yes'])
         self.test_proof_money()
-        background = [load_image(location[0]), location[3]]
+        background = [pygame.transform.scale(load_image(location[0]), screen.get_size()), location[3]]
         draw_map()
 
     # метод который берёт информацию из игры и делает нужные парраметры в магазине
@@ -165,7 +165,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
         with open('MONEY.txt', mode='w', encoding='utf-8') as txt:
             if self.sender().objectName()[-1] == 'n':
                 ## начина от сюда
-                pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (120, 180))
+                pers = pygame.transform.scale(load_image(r'Jungle\jungle_mainhero.png'), (int(screen.get_width() / 16),
+                                                                                          int(screen.get_height() / 6)))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_green.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball2.png'),
                         pygame.transform.flip(load_image('Other\\fireball2.png'), True, False),
@@ -179,7 +180,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
                     txt.write(str(COUNT_MONEY))
                 self.update_json('winter', 'hero', True)
                 self.update_info()
-                pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (120, 180))
+                pers = pygame.transform.scale(load_image(r'Winter\winter_mainhero.png'), (int(screen.get_width() / 16),
+                                                                                          int(screen.get_height() / 6)))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\posoh_shoot_white.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\fireball1.png'),
                         pygame.transform.flip(load_image('Other\\fireball1.png'), True, False),
@@ -192,7 +194,8 @@ class MyShop(QMainWindow, Ui_MainWindow):
                     txt.write(str(COUNT_MONEY))
                 self.update_json('desert', 'hero', True)
                 self.update_info()
-                pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (180, 180))
+                pers = pygame.transform.scale(load_image('Desert\desert_mainhero.png'), (int(screen.get_width() / 10.666),
+                                                                                         int(screen.get_height() / 6)))
                 player_shoot_mus = pygame.mixer.Sound(r'data\Music\bullet_shoot.mp3')
                 pers = [pers, pygame.transform.flip(pers, True, False), load_image('Other\\bullet.png'),
                         pygame.transform.flip(load_image('Other\\bullet.png'), True, False),
@@ -341,9 +344,9 @@ def draw_map():
 class Shop(pygame.sprite.Sprite):
     def __init__(self):
         super(Shop, self).__init__(sprites_dop, all_sprites)
-        self.image = pygame.transform.scale(load_image(r'Other\shop.png'), (50, 50))
+        self.image = pygame.transform.scale(load_image(r'Other\shop.png'), (int(W_proc * 2.5), int(W_proc * 2.5)))
         self.rect = self.image.get_rect()
-        self.rect.x = screen.get_width() - 100
+        self.rect.x = screen.get_width() - W_proc * 5
         self.rect.y = 0
 
     def update(self, pos):
@@ -355,9 +358,9 @@ class Shop(pygame.sprite.Sprite):
 class Settings(pygame.sprite.Sprite):
     def __init__(self):
         super(Settings, self).__init__(sprites_dop, all_sprites)
-        self.image = pygame.transform.scale(load_image(r'Other\settings.png'), (50, 50))
+        self.image = pygame.transform.scale(load_image(r'Other\settings.png'), (int(W_proc * 2.5), int(W_proc * 2.5)))
         self.rect = self.image.get_rect()
-        self.rect.x = screen.get_width() - 50
+        self.rect.x = screen.get_width() - W_proc * 2.5
         self.rect.y = 0
 
     def update(self, pos):
@@ -394,7 +397,7 @@ class Map(pygame.sprite.Sprite):
         super(Map, self).__init__(map_group, all_sprites)
         self.image = pygame.transform.scale(load_image(image),
                                             (screen.get_width() // len(location_code[0]),
-                                             screen.get_height() // len(location_code)))
+                                             (screen.get_height() // len(location_code))))
         map_coords_spisok.append(y)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()

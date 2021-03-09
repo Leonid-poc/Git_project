@@ -1,4 +1,3 @@
-import pygame as pygame
 
 from build import *
 from screensaver import *
@@ -180,7 +179,7 @@ class Player(Game_Object):
         self.characteristics_of_character = pers
         self.image = pers[0]
         self.rect = self.image.get_rect()
-        self.rect.y = 755
+        self.rect.y = H_proc * 69.90
         self.mask = pygame.mask.from_surface(self.image)
         self.right_pers, self.left_pers = True, False
         self.update_static_pers()
@@ -337,7 +336,7 @@ class Portal(Game_Object):
         self.count_step %= self.STEP * 4
         self.image = self.characteristics_of_character[self.count_step // self.STEP]
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 10, 680
+        self.rect.x, self.rect.y = W_proc*0.42, H_proc*67
         self.count_step += 1
 
 
@@ -348,7 +347,7 @@ wave_number = 0
 
 port = []
 for i in range(4):
-    port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (130, 254)))
+    port.append(pygame.transform.scale(load_image(rf'Other\portal{i}.png'), (int(W_proc*7.77), int(H_proc * 26))))
 port.append({'damage': 0, 'health': 700, 'mana': 0})
 
 # функция которая создаёт волны мобов по особой формуле
@@ -368,11 +367,11 @@ def wave():
 
 
 # вызываю определённые классы которые автоматически отрисовывваются
-portal = Portal(10, 680, port)
+portal = Portal(W_proc*0.42, H_proc*67, port)
 shop = Shop()
 Settings()
 Money()
-Player1 = Player(0, 500, pers)
+Player1 = Player(0, 100, pers)
 draw_map()
 
 
@@ -392,6 +391,9 @@ def mainest_main():
                 sprites_dop.update(i.pos)
             if i.type == pygame.QUIT or KEYS[pygame.K_F10] or KEYS[pygame.K_ESCAPE]:
                 sys.exit()
+            if i.type == pygame.KEYDOWN:
+                if i.key == pygame.K_F1:
+                    lol()
             if KEYS[pygame.K_t] + KEYS[pygame.K_i] + KEYS[pygame.K_o]:
                 Player1.give_mod()
 
@@ -401,7 +403,7 @@ def mainest_main():
         # Отрисовка кол-ва хп и маны
         Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
         Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
-        Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
+        Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), W_proc * 0.52, H_proc * 64.18, W_proc * 6.77, H_proc * 1.85).obn()
         # Восполнение маны
         Player1.up_mana()
 
@@ -431,8 +433,9 @@ def mainest_main():
         w = FONT.render(f"Wave: {wave_number}", True, (255, 255, 255))
         screen.blit(w, (410, 0))
         screen.blit(best_kills, (0, 110))
+        info = FONT.render(f"F1 - info", True, (230, 230, 230))
+        screen.blit(info, (650, 0))
         # Вызов волн мобов
-
         wave()
 
         # Смена кадра
@@ -446,7 +449,9 @@ def mainest_main():
             screen.blit(return_background()[0], (0, 0))
             Indicator(Player1.return_hp()[0], Player1.return_hp()[1], (255, 0, 0), 100, 0, 140, 65).show()
             Indicator(Player1.return_mana()[0], Player1.return_mana()[1], (0, 0, 255), 260, 0, 140, 65).show()
-            Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), 10, 650, 130, 20).obn()
+            Indicator(portal.return_hp()[0], portal.return_hp()[1], (255, 0, 0), W_proc * 0.52, H_proc * 64.18,
+                      W_proc * 6.77,
+                      H_proc * 1.85).obn()
             player_group.update(return_skin())
             projectales.update()
             mod_group.update()
@@ -462,7 +467,18 @@ def mainest_main():
 
             end_game()
 
-
+def lol():
+    run = True
+    while run:
+        f2 = pygame.font.SysFont('serif', 48)
+        for i in pygame.event.get():
+            if i.type == pygame.KEYDOWN:
+                if i.key == pygame.K_F1:
+                    run = False
+        inform = f2.render(f"Здесь ваша реклама, для выхода - f1", True, (130, 130, 255))
+        screen.blit(inform, (650, 0))
+        pygame.display.flip()
+        clock.tick(FPS)
 # метод с которого всё начинается
 def start():
 
@@ -480,6 +496,7 @@ def start():
                 background_music.play(-1)
                 mainest_main()
                 sys.exit()
+
         if KEYS[pygame.K_a] + KEYS[pygame.K_u] + KEYS[pygame.K_f] == 3 and \
                 reloading_easter_eggs == 0:
             reloading_easter_eggs = 60
